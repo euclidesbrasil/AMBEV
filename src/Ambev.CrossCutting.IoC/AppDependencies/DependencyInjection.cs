@@ -43,6 +43,7 @@ namespace Ambev.Infrastructure.CrossCutting.IoC
             });
 
 
+            services.AddScoped<ISaleRepository, SaleRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICartRepository, CartRepository>();

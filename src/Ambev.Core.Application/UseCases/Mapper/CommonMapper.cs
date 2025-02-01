@@ -16,6 +16,9 @@ using Ambev.Application.UseCases.Commands.User.CreateUser;
 using Ambev.Application.UseCases.Commands.User.DeleteUser;
 using Ambev.Core.Application.UseCases.Queries.GetCartsQuery;
 using Ambev.Core.Application.UseCases.Queries.GetCartQueryId;
+using Ambev.Core.Application.UseCases.Queries.GetSaleById;
+using Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale;
+using Ambev.Core.Application.UseCases.Commands.Sale.CancelSale;
 
 namespace Ambev.Core.Application.UseCases.Mapper
 {
@@ -57,8 +60,11 @@ namespace Ambev.Core.Application.UseCases.Mapper
             CreateMap<UpdateUserRequest, User>();
             CreateMap<User, UpdateUserRequest>();
             CreateMap<UpdateUserRequest, UpdateUserResponse>();
-
-
+            //Sale
+            CreateMap<CancelSaleResponse, Sale > ();
+            CreateMap<UpdateSaleRequest, Sale > ();
+            CreateMap<Sale, UpdateSaleResponse> ();
+            CreateMap<Sale, GetSaleByIdResponse>();
         }
     }
 }

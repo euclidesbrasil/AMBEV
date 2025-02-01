@@ -41,14 +41,7 @@ namespace Ambev.General.Api.Controllers
             return Ok(response);
         }
 
-        // DELETE /users/{id}
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id,
-                                                CancellationToken cancellationToken)
-        {
-            var response = await _mediator.Send(new DeleteProductRequest(id), cancellationToken);
-            return Ok(response);
-        }
+      
 
         [HttpGet("/users/{id}")]
         public async Task<ActionResult<List<string>>> GetById(int id,CancellationToken cancellationToken)
