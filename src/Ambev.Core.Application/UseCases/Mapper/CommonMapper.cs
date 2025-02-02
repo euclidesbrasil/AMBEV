@@ -20,7 +20,10 @@ using Ambev.Core.Application.UseCases.Queries.GetSaleById;
 using Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.CancelSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.CreateSale;
-
+using Ambev.Core.Application.UseCases.Commands.Sale.CreateBranch;
+using Ambev.Core.Application.UseCases.Commands.Branch.UpdateBranch;
+using Entities = Ambev.Core.Domain.Entities;
+using Ambev.Core.Application.Branch.GetBranchById.GetBranchById;
 namespace Ambev.Core.Application.UseCases.Mapper
 {
     public class CommonMapper : Profile
@@ -79,7 +82,23 @@ namespace Ambev.Core.Application.UseCases.Mapper
             CreateMap<Sale,CancelSaleResponse>();
             CreateMap<SaleItem, SaleItemDTO>();
             CreateMap<SaleItem, SaleItemBaseDTO>();
+            //Branch
+            CreateMap<CreateBranchRequest, Entities.Branch >();
+            CreateMap<UpdateBranchRequest, Entities.Branch>();
 
+            CreateMap<GetBranchByIdResponse, Entities.Branch>();
+            CreateMap<GetBranchByIdResponse, BranchDTO>();
+            CreateMap<Entities.Branch, CreateBranchResponse>();
+            CreateMap<Entities.Branch, GetBranchByIdResponse>();
+            CreateMap<Entities.Branch, UpdateBranchResponse>();
+            
+            CreateMap<Entities.Branch, BranchDTO>();
+            CreateMap<Entities.Branch, BranchBaseDTO>();
+            CreateMap<BranchDTO, CreateBranchResponse>();
+            CreateMap<BranchBaseDTO, CreateBranchResponse>();
+            CreateMap<BranchBaseDTO, UpdateBranchRequest>();
+            CreateMap<BranchDTO, CreateBranchResponse>();
+            
         }
     }
 }
