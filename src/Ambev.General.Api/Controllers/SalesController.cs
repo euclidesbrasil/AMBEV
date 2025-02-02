@@ -14,11 +14,11 @@ namespace Ambev.General.Api.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class SaleController : ControllerBase
+public class SalesController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public SaleController(IMediator mediator)
+    public SalesController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -35,12 +35,11 @@ public class SaleController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSaleRequest request,
                                             CancellationToken cancellationToken)
     {
-        var requestUpdate = request.Id = id;
-        var response = await _mediator.Send(requestUpdate, cancellationToken);
+        var response = await _mediator.Send(request, cancellationToken);
         return Ok(response);
     }
 
-    [HttpPut("/sale/cancel/{id}")]
+    [HttpPut("/sales/cancel/{id}")]
     public async Task<IActionResult> Cancel(int id,
                                             CancellationToken cancellationToken)
     {
@@ -49,14 +48,14 @@ public class SaleController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/sale/{id}")]
-    public async Task<ActionResult<List<string>>> GetById(int id, CancellationToken cancellationToken)
+    [HttpGet("/sales/{id}")]
+    public async Task<ActionResult<GetSaleByIdResponse>> GetById(int id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetUsersByIdRequest(id), cancellationToken);
+        var response = await _mediator.Send(new GetSaleByIdRequest(id), cancellationToken);
         return Ok(response);
     }
 
-    [HttpGet("/sale/{_page}/{_size}/{_order?}")]
+    [HttpGet("/sales/{_page}/{_size}/{_order?}")]
     public async Task<ActionResult<GetSalesQueryResponse>> GetByCategories(CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "")
     {
         var response = await _mediator.Send(new GetSalesQueryRequest( _page, _size, _order), cancellationToken);

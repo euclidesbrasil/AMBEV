@@ -32,13 +32,13 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CancelSale
             CancellationToken cancellationToken)
         {
 
-            Ambev.Core.Domain.Entities.Sale sale = await _saleRepository.Get(request.id, cancellationToken);
+            Ambev.Core.Domain.Entities.Sale sale = await _saleRepository.GetSaleWithItemsAsync(request.id, cancellationToken);
             if (sale == null)
             {
                 throw new KeyNotFoundException("Not found.");
             }
 
-            sale.IsCancelled = true; 
+            sale.Cancel();
             _saleRepository.Update(sale);
             await _unitOfWork.Commit(cancellationToken);
             // TODO: Call event cancel sale;

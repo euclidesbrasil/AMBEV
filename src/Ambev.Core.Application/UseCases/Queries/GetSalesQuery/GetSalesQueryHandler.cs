@@ -33,10 +33,10 @@ namespace Ambev.Core.Application.UseCases.Queries.GetSalesQuery
                 Size = request.size
             }, cancellationToken);
 
-            List<SaleDTO> itensReturn = new List<SaleDTO>();
+            List<SaleWithDetaislsDTO> itensReturn = new List<SaleWithDetaislsDTO>();
             foreach(var item in sales.Data)
             {
-                itensReturn.Add(_mapper.Map<SaleDTO>(item));
+                itensReturn.Add(_mapper.Map<SaleWithDetaislsDTO>(item));
             }
 
             return new GetSalesQueryResponse()

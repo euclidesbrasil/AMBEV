@@ -19,10 +19,11 @@ using Ambev.Core.Application.UseCases.Queries.GetCartQueryId;
 using Ambev.Core.Application.UseCases.Queries.GetSaleById;
 using Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.CancelSale;
+using Ambev.Core.Application.UseCases.Commands.Sale.CreateSale;
 
 namespace Ambev.Core.Application.UseCases.Mapper
 {
-    public  class CommonMapper : Profile
+    public class CommonMapper : Profile
     {
         public CommonMapper()
         {
@@ -41,11 +42,11 @@ namespace Ambev.Core.Application.UseCases.Mapper
 
             // Carts...
             CreateMap<Cart, GetCartsQueryDataResponse>();
-            CreateMap<GetCartsQueryDataResponse, Cart >();
+            CreateMap<GetCartsQueryDataResponse, Cart>();
             CreateMap<Cart, CreateCartResponse>();
             CreateMap<Cart, GetCartByIdResponse>();
             CreateMap<Cart, UpdateCartResponse>();
-            CreateMap<CartItemBaseDTO,CartItem>();
+            CreateMap<CartItemBaseDTO, CartItem>();
             CreateMap<CartItem, CartItemBaseDTO>();
             //Product
             CreateMap<CreateProductRequest, Product>();
@@ -61,10 +62,24 @@ namespace Ambev.Core.Application.UseCases.Mapper
             CreateMap<User, UpdateUserRequest>();
             CreateMap<UpdateUserRequest, UpdateUserResponse>();
             //Sale
-            CreateMap<CancelSaleResponse, Sale > ();
-            CreateMap<UpdateSaleRequest, Sale > ();
-            CreateMap<Sale, UpdateSaleResponse> ();
+            CreateMap<CreateSaleRequest, Sale>();
+            CreateMap<UpdateSaleRequest, Sale>();
+            CreateMap<CreateSaleResponse, Sale>();
+            CreateMap<UpdateSaleItemRequest, SaleItem>();
+            CreateMap<SaleWithDetaislsDTO, Sale>();
+            CreateMap<Sale, SaleWithDetaislsDTO>();
+            CreateMap<SaleDTO, Sale>();
+            CreateMap<SaleBaseDTO, Sale>();
+            CreateMap<SaleItemDTO, SaleItem>();
+            CreateMap<SaleItemBaseDTO, SaleItem>();
+            CreateMap<SaleBaseDTO, SaleItem>();
+            CreateMap<Sale, UpdateSaleResponse>();
+            CreateMap<Sale, CreateSaleResponse>();
             CreateMap<Sale, GetSaleByIdResponse>();
+            CreateMap<Sale,CancelSaleResponse>();
+            CreateMap<SaleItem, SaleItemDTO>();
+            CreateMap<SaleItem, SaleItemBaseDTO>();
+
         }
     }
 }

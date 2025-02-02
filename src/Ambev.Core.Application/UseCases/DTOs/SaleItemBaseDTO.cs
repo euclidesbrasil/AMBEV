@@ -8,9 +8,7 @@ namespace Ambev.Core.Application.UseCases.DTOs
 {
     public class SaleItemBaseDTO
     {
-        public int SaleId { get; set; } // Relacionamento com a venda (FK)
         public int ProductId { get; set; } // Identidade Externa do Produto
-        // public string ProductName { get; set; } // Nome do Produto (desnormalizado)
         public int Quantity { get; set; } // Quantidade vendida
         public decimal UnitPrice { get; set; } // Preço unitário
         public decimal Discount { get; set; } // Valor do desconto aplicado

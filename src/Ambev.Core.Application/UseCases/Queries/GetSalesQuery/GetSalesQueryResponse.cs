@@ -10,7 +10,7 @@ namespace Ambev.Core.Application.UseCases.Queries.GetSaleById
 {
     public sealed record GetSalesQueryResponse
     {
-        public List<SaleDTO> Data { get; set; }
+        public List<SaleWithDetaislsDTO> Data { get; set; }
         public int TotalItems { get; set; }
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }

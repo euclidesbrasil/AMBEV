@@ -31,4 +31,11 @@ public class SaleRepository : BaseRepository<Sale>, ISaleRepository
             CurrentPage = paginationQuery.Page
         };
     }
+
+    public async Task<Sale> GetSaleWithItemsAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Sales
+            .Include(s => s.Items)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
 }

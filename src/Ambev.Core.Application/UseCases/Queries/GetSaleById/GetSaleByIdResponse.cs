@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ambev.Core.Application.UseCases.Queries.GetSaleById
 {
-    public class GetSaleByIdResponse : CartBaseDTO
+    public class GetSaleByIdResponse : SaleWithDetaislsDTO
     {
-        public int Id { get; init; }
     }
 }

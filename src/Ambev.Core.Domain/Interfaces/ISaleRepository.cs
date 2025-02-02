@@ -6,4 +6,5 @@ namespace Ambev.Core.Domain.Interfaces;
 public interface ISaleRepository : IBaseRepository<Sale>
 {
     Task<PaginatedResult<Sale>> GetSalesPagination(PaginationQuery paginationQuery, CancellationToken cancellationToken);
+    Task<Sale> GetSaleWithItemsAsync(int saleId, CancellationToken cancellationToken);
 }

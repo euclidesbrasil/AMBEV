@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
 {
-    public class CreateSaleRequest:SaleDTO, IRequest<CreateSaleResponse>
+    public class CreateSaleRequest:SaleBaseDTO, IRequest<CreateSaleResponse>
     {
     }
 }

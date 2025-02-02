@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ambev.Core.Application.UseCases.Commands.Sale.CancelSale
 {
-    public class CancelSaleResponse:SaleDTO
+    public class CancelSaleResponse: SaleWithDetaislsDTO
     {
     }
 }
