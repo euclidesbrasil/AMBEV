@@ -11,18 +11,16 @@ namespace Ambev.Application.UseCases.Commands.Cart.UpdateCart;
 public class UpdateCartHandler :
        IRequestHandler<UpdateCartRequest, UpdateCartResponse>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICartRepository _cartRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-
-    public UpdateCartHandler(IUnitOfWork unitOfWork,
-        ICartRepository cartRepository,
-        IMapper mapper
-        )
+    private readonly IUnitOfWork _unitOfWork;
+    public UpdateCartHandler(ICartRepository cartRepository, IProductRepository productRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
         _cartRepository = cartRepository;
+        _productRepository = productRepository;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<UpdateCartResponse> Handle(UpdateCartRequest request,
@@ -32,8 +30,9 @@ public class UpdateCartHandler :
         var carts = await _cartRepository.Filter(x => x.Id == request.GetIdContext(), cancellationToken);
         if (carts == null || carts.Count == 0)
         {
-            throw new KeyNotFoundException("Not found.");
+            throw new KeyNotFoundException($"Cart with ID  {request.Id} does not exist in our database");
         }
+
         var cartUpdate = carts.FirstOrDefault();
 
         List<CartItem> itens = new List<CartItem>();
@@ -41,11 +40,19 @@ public class UpdateCartHandler :
         {
             itens.Add(_mapper.Map<CartItem>(item));
         }
+
+        var idsProducts = itens.Select(x => x.ProductId).Distinct().ToList();
+        var allProducts = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
+        var productsNotSavedInDataBase = idsProducts.Except(allProducts.Select(p => p.Id)).ToList();
+        if (productsNotSavedInDataBase.Count > 0)
+        {
+            throw new KeyNotFoundException($"Products with ID {string.Join(",", productsNotSavedInDataBase.Distinct())} does not exist in our database");
+        }
+
         cartUpdate.RemoveAllProducts();
         cartUpdate.Update(request.UserId, request.Date, itens);
 
-        _cartRepository.Update(cartUpdate);
-
+        await _cartRepository.Update(cartUpdate);
         await _unitOfWork.Commit(cancellationToken);
         return _mapper.Map<UpdateCartResponse>(cartUpdate);
     }

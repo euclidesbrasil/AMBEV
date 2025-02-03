@@ -11,14 +11,16 @@ using System.Threading.Tasks;
 
 namespace Ambev.Application.UseCases.Commands.Cart.CreateCart
 {
-    public class AddCartCommandHandler : IRequestHandler<CreateCartRequest, CreateCartResponse>
+    public class CreateCartHandler : IRequestHandler<CreateCartRequest, CreateCartResponse>
     {
         private readonly ICartRepository _cartRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public AddCartCommandHandler(ICartRepository cartRepository, IMapper mapper)
+        public CreateCartHandler(ICartRepository cartRepository, IProductRepository productRepository, IMapper mapper)
         {
             _cartRepository = cartRepository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -27,6 +29,13 @@ namespace Ambev.Application.UseCases.Commands.Cart.CreateCart
             var cart = new Ambev.Core.Domain.Entities.Cart(request.UserId, request.Date, request.Products.Select(p =>
             new CartItem(p.ProductId, p.Quantity)).ToList());
 
+            var idsProducts = cart.Products.Select(x => x.ProductId).Distinct().ToList();
+            var allProducts = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
+            var productsNotSavedInDataBase = idsProducts.Except(allProducts.Select(p => p.Id)).ToList();
+            if (productsNotSavedInDataBase.Count > 0)
+            {
+                throw new ArgumentNullException($"Products not found ({string.Join(",", productsNotSavedInDataBase.Distinct())}).");
+            }
             await _cartRepository.Create(cart);
             var cartSaved = _mapper.Map<Ambev.Core.Domain.Entities.Cart, CreateCartResponse>(cart);
             return cartSaved;

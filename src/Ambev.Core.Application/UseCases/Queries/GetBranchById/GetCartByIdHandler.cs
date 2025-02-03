@@ -28,7 +28,7 @@ namespace Ambev.Core.Application.UseCases.Branch.GetBranchById
             
             if(branch is null)
             {
-                throw new KeyNotFoundException("Not found.");
+                throw new KeyNotFoundException($"Branch with ID  {request.id} does not exist in our database");
             }
 
             return _mapper.Map<GetBranchByIdResponse>(branch);

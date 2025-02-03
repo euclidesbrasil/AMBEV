@@ -39,7 +39,9 @@ namespace Ambev.Core.Application.UseCases.Queries.GetSaleById
             var sale = await _saleRepository.GetSaleWithItemsAsync(request.id, cancellationToken);
 
             if (sale is null)
-                throw new KeyNotFoundException("Not found.");
+            {
+                throw new KeyNotFoundException($"Sale with ID  {request.id} does not exist in our database");
+            }
 
             return _mapper.Map<GetSaleByIdResponse>(sale);
         }

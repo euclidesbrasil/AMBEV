@@ -35,7 +35,7 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CancelSale
             Ambev.Core.Domain.Entities.Sale sale = await _saleRepository.GetSaleWithItemsAsync(request.id, cancellationToken);
             if (sale == null)
             {
-                throw new KeyNotFoundException("Not found.");
+                throw new KeyNotFoundException($"Sale with ID  {request.id} does not exist in our database");
             }
 
             sale.Cancel();

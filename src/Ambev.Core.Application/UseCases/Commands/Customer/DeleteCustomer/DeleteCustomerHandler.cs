@@ -27,7 +27,7 @@ public class DeleteCustomerHandler : IRequestHandler<DeleteCustomerRequest, Dele
 
         if (customer == null)
         {
-            throw new KeyNotFoundException("Not found.");
+            throw new KeyNotFoundException($"Custumer with ID  {request.id} does not exist in our database");
         }
 
         _custumerRepository.Delete(customer);

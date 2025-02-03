@@ -27,7 +27,7 @@ namespace Ambev.Core.Application.UseCases.Queries.GetCartQueryId
             
             if(carts == null || carts.Count == 0)
             {
-                throw new KeyNotFoundException("Not found.");
+                throw new KeyNotFoundException($"Cart with ID  {request.id} does not exist in our database");
             }
 
             var cardFound = carts.FirstOrDefault();

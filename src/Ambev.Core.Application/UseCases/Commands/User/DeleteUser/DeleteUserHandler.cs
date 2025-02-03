@@ -27,7 +27,7 @@ public class DeleteCartHandler : IRequestHandler<DeleteUserRequest, DeleteUserRe
 
         if (user == null)
         {
-            throw new KeyNotFoundException("Not found.");
+            throw new KeyNotFoundException($"User with ID  {request.Id} does not exist in our database");
         }
 
         _userRepository.Delete(user);
