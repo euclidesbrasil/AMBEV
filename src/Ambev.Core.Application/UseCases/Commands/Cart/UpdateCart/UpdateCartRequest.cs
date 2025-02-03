@@ -8,7 +8,7 @@ namespace Ambev.Application.UseCases.Commands.Cart.UpdateCart
 {
     public class UpdateCartRequest : CartBaseDTO, IRequest<UpdateCartResponse>
     {
-        private int Id { get; set; }
+        public int Id { get; internal set; }
 
         public void SetIdContext(int id)
         {

@@ -1,39 +1,96 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using FluentValidation;
 namespace Ambev.General.Api.Filters;
 
 public class CustomExceptionFilter : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
-        if (context.Exception is FluentValidation.ValidationException validationException)
-        {
-            var errors = validationException.Errors
-                .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
-                .ToList();
+        var exception = context.Exception;
 
-            var result = new ObjectResult(new { Errors = errors })
-            {
-                StatusCode = 400, // Bad Request
-            };
+        switch (exception)
+        {
+            // Erros de validação (400 Bad Request)
+            case ValidationException validationException:
+                var errors = validationException.Errors
+                    .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
+                    .ToList();
 
-            context.Result = result;
-            context.ExceptionHandled = true;
+                context.Result = new BadRequestObjectResult(new
+                {
+                    Title = "Validation erros.",
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Errors = errors
+                });
+                context.ExceptionHandled = true;
+                break;
+
+            // Recurso não encontrado (404 Not Found)
+            case KeyNotFoundException _:
+            case ArgumentNullException _:
+                context.Result = new NotFoundObjectResult(new
+                {
+                    Title = "Resource not found.",
+                    Status = (int)HttpStatusCode.NotFound,
+                    Detail = exception.Message
+                });
+                context.ExceptionHandled = true;
+                break;
+
+            // Erros de solicitação inválida (400 Bad Request)
+            case ArgumentException _:
+            case InvalidOperationException _:
+                context.Result = new BadRequestObjectResult(new
+                {
+                    Title = "Invalid request.",
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Detail = exception.Message
+                });
+                context.ExceptionHandled = true;
+                break;
+
+            // Erros de autenticação/autorização (401 Unauthorized ou 403 Forbidden)
+            case UnauthorizedAccessException _:
+                context.Result = new ObjectResult(new
+                {
+                    Title = "Unauthorized.",
+                    Status = (int)HttpStatusCode.Unauthorized,
+                    Detail = exception.Message
+                })
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
+                context.ExceptionHandled = true;
+                break;
+
+            // Erros internos do servidor (500 Internal Server Error)
+            default:
+                context.Result = new ObjectResult(new
+                {
+                    Title = "Internal server error.",
+                    Status = (int)HttpStatusCode.InternalServerError,
+                    Detail = "Ocorreu um erro inesperado. Tente novamente mais tarde."
+                })
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
+                context.ExceptionHandled = true;
+                break;
         }
-        else if (context.Exception is ArgumentNullException ||
-                   context.Exception is KeyNotFoundException)
-        {
-            // Tratar erro 404 (Não Encontrado)
-            context.Result = new NotFoundObjectResult(new { Error = "Recurso não encontrado." });
-            context.ExceptionHandled = true;
-        }
-        else if (context.Exception is HttpRequestException ||
-                 context.Exception is InvalidOperationException)
-        {
-            // Tratar erro 500 (Erro Interno do Servidor)
-            context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            context.ExceptionHandled = true;
-        }
+
+        // Log da exceção (opcional, dependendo do seu sistema de logs)
+        LogException(exception);
+    }
+
+    private void LogException(Exception exception)
+    {
+        // Implemente o registro de logs aqui (ex.: usando ILogger, Serilog, etc.)
+        Console.WriteLine($"Erro: {exception.Message}");
+        Console.WriteLine($"StackTrace: {exception.StackTrace}");
     }
 }
