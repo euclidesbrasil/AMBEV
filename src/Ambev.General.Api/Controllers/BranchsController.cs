@@ -51,8 +51,8 @@ namespace Ambev.General.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("/branchs/{_page}/{_size}/{_order?}")]
-        public async Task<ActionResult<List<GetBranchsQueryResponse>>> GetByCategories(CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "")
+        [HttpGet("/branchs")]
+        public async Task<ActionResult<List<GetBranchsQueryResponse>>> GetByCategories(CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "id asc")
         {
             var response = await _mediator.Send(new GetBranchsQueryRequest( _page, _size, _order), cancellationToken);
             return Ok(response);

@@ -55,8 +55,8 @@ public class SalesController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/sales/{_page}/{_size}/{_order?}")]
-    public async Task<ActionResult<GetSalesQueryResponse>> GetByCategories(CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "")
+    [HttpGet("/sales")]
+    public async Task<ActionResult<GetSalesQueryResponse>> GetByCategories(CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "id asc")
     {
         var response = await _mediator.Send(new GetSalesQueryRequest( _page, _size, _order), cancellationToken);
         return Ok(response);

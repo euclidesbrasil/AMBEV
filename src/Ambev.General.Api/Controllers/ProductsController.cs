@@ -54,8 +54,8 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/products/category/{category}/{_page}/{_size}/{_order?}")]
-    public async Task<ActionResult<List<GetProductsByCategoriesResponse>>> GetByCategories(string category, CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "")
+    [HttpGet("/products/category/{category}")]
+    public async Task<ActionResult<List<GetProductsByCategoriesResponse>>> GetByCategories(string category, CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "id asc")
     {
         var response = await _mediator.Send(new GetProductsByCategoriesRequest(category, _page, _size, _order), cancellationToken);
         return Ok(response);

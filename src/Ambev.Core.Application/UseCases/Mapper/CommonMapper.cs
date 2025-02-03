@@ -25,6 +25,12 @@ using Ambev.Core.Application.UseCases.Commands.Branch.UpdateBranch;
 using Entities = Ambev.Core.Domain.Entities;
 using Ambev.Core.Application.Branch.GetBranchById.GetBranchById;
 using Ambev.Core.Application.UseCases.Queries.GetUsersQuery;
+using Ambev.Application.UseCases.Commands.Customer.CreateCustomer;
+using Ambev.Application.UseCases.Commands.Customer.DeleteCustomer;
+using Ambev.Application.UseCases.Commands.Customer.UpdateCustomer;
+using Ambev.Core.Application.UseCases.Queries.GetCustomerById;
+using Ambev.Core.Application.UseCases.Queries.GetCustomersQuery;
+using Microsoft.Extensions.Configuration;
 namespace Ambev.Core.Application.UseCases.Mapper
 {
     public class CommonMapper : Profile
@@ -101,7 +107,18 @@ namespace Ambev.Core.Application.UseCases.Mapper
             CreateMap<BranchBaseDTO, CreateBranchResponse>();
             CreateMap<BranchBaseDTO, UpdateBranchRequest>();
             CreateMap<BranchDTO, CreateBranchResponse>();
-            
+
+            //Customer
+            CreateMap<CustomerDTO, Customer>();
+            CreateMap<Customer, CustomerDTO>();
+            CreateMap<CreateCustomerRequest, Customer>();
+            CreateMap<Customer,CreateCustomerResponse>();
+            CreateMap<Customer, GetCustomerByIdRequest>();
+            CreateMap<Customer, GetCustomersQueryResponse>();
+            CreateMap<Customer, GetCustomerByIdResponse>();
+            CreateMap<UpdateCustomerResponse, Customer>();
+            CreateMap<Customer, UpdateCustomerResponse>();
+            CreateMap<DeleteCustomerResponse, Customer>();
         }
     }
 }
