@@ -3,6 +3,7 @@ using Ambev.Infrastructure.Persistence.PostgreSQL.Context;
 using Microsoft.EntityFrameworkCore;
 using Ambev.Core.Domain.Common;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using Ambev.Core.Domain.Entities;
 
 namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories;
@@ -27,11 +28,8 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
         var query = _context.Products.Where(x => x.Category.Contains(nameCategory));
 
-        // Aplicar ordenação se houver
-        if (!string.IsNullOrEmpty(paginationQuery.Order))
-        {
-            // query = query.OrderBy(paginationQuery.Order); // Ajuste a lógica de ordenação conforme necessário
-        }
+        paginationQuery.Order = paginationQuery.Order ?? "id asc";
+        query = query.OrderBy(paginationQuery.Order);
 
         var totalCount = await query.CountAsync(cancellationToken); // Total de itens sem paginação
         var items = await query

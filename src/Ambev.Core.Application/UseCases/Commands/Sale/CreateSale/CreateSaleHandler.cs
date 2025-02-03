@@ -1,4 +1,5 @@
-﻿using Ambev.Core.Domain.Interfaces;
+﻿using Ambev.Core.Domain.Entities;
+using Ambev.Core.Domain.Interfaces;
 using AutoMapper;
 using MediatR;
 using System;
@@ -37,13 +38,17 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
         {
             var sale = _mapper.Map<Ambev.Core.Domain.Entities.Sale>(request);
             var user = await _userRepository.Get(request.UserId, cancellationToken);
-
-            List<int> idsProducts = sale.Items.Select(i => i.ProductId).ToList();
-            var productsUsed =  await _productRepository.Filter(x=> idsProducts.Contains(x.Id), cancellationToken);
-            foreach(var prd in sale.Items)
+            if(user is null)
             {
-                prd.ProductName = productsUsed.Find(x=> x.Id == prd.ProductId)?.Title;
+                throw new ArgumentNullException("User not found");
             }
+
+            List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();
+            var productsUsed = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
+            List<SaleItem> itens = _mapper.Map<List<Ambev.Core.Domain.Entities.SaleItem>>(request.Items);
+            sale.ClearItems();
+            sale.AddItems(itens, productsUsed);
+            sale.ApplyBusinessRules();
 
             sale.UserFirstName =user.Firstname;
             // TODO: FIX

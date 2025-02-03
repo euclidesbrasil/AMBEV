@@ -44,8 +44,10 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
 
             List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();
             var productsUsed = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
+
             List<SaleItem> itens =  _mapper.Map<List<Ambev.Core.Domain.Entities.SaleItem>>(request.Items);
-            sale.UpdateItems(itens, productsUsed);
+            sale.AddItems(itens.Where(x => x.Id == 0).ToList(), productsUsed);
+            sale.UpdateItems(itens.Where(x => x.Id != 0).ToList(), productsUsed);
 
             sale.UserFirstName = user.Firstname;
             // TODO: FIX

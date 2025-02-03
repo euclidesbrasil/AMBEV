@@ -9,5 +9,12 @@ namespace Ambev.Core.Application.UseCases.Queries.GetSaleById
 {
     public class GetSaleByIdResponse : SaleWithDetaislsDTO
     {
+        public decimal TotalAmount
+        {
+            get
+            {
+                return Items?.Sum(item => item.TotalPrice) ?? 0;
+            }
+        }
     }
 }

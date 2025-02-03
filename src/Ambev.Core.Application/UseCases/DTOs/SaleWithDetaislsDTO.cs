@@ -11,5 +11,6 @@ namespace Ambev.Core.Application.UseCases.DTOs
     {
         public string UserFirstName { get; set; } // Nome do Cliente (desnormalizado)
         public string BranchName { get; set; } // Nome da Filial (desnormalizado)
+        public decimal TotalAmount { get; set; }
     }
 }

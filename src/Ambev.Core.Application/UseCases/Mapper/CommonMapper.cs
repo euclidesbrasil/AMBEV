@@ -24,6 +24,7 @@ using Ambev.Core.Application.UseCases.Commands.Sale.CreateBranch;
 using Ambev.Core.Application.UseCases.Commands.Branch.UpdateBranch;
 using Entities = Ambev.Core.Domain.Entities;
 using Ambev.Core.Application.Branch.GetBranchById.GetBranchById;
+using Ambev.Core.Application.UseCases.Queries.GetUsersQuery;
 namespace Ambev.Core.Application.UseCases.Mapper
 {
     public class CommonMapper : Profile
@@ -63,6 +64,8 @@ namespace Ambev.Core.Application.UseCases.Mapper
             CreateMap<User, DeleteUserRequest>();
             CreateMap<UpdateUserRequest, User>();
             CreateMap<User, UpdateUserRequest>();
+            CreateMap<User, GetUsersQueryResponse>();
+            CreateMap<User, UserDTO>();
             CreateMap<UpdateUserRequest, UpdateUserResponse>();
             //Sale
             CreateMap<CreateSaleRequest, Sale>();

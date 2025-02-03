@@ -8,11 +8,26 @@ namespace Ambev.Core.Application.UseCases.DTOs
 {
     public class SaleItemBaseDTO
     {
+        public SaleItemBaseDTO()
+        {
+            IsCancelled = false;
+        }
         public int ProductId { get; set; } // Identidade Externa do Produto
         public int Quantity { get; set; } // Quantidade vendida
-        public decimal UnitPrice { get; set; } // Preço unitário
-        public decimal Discount { get; set; } // Valor do desconto aplicado
-        public decimal TotalPrice { get; set; } // Valor total do item (considerando desconto)
+        public decimal UnitPrice { get; internal set; } // Preço unitário
+        public decimal Discount { get; internal set; } // Valor do desconto aplicado
+        public decimal TotalPrice
+        {
+            get
+            {
+                decimal totalPrice = 0;
+                if (!IsCancelled)
+                {
+                    totalPrice = (UnitPrice * Quantity) - Discount;
+                }
+                return totalPrice;
+            }
+        }
         public bool IsCancelled { get; set; } // Indicador se o item foi cancelado
     }
 }

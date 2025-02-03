@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Ambev.Core.Domain.Common;
 using System.Linq;
 using Ambev.Core.Domain.Entities;
+using System.Linq.Dynamic.Core;
 
 namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories;
 
@@ -27,11 +28,8 @@ public class BranchRepository : BaseRepository<Branch>, IBranchRepository
     {
         var query = _context.Branches.Where(x => true);
 
-        // Aplicar ordenação se houver
-        if (!string.IsNullOrEmpty(paginationQuery.Order))
-        {
-            // query = query.OrderBy(paginationQuery.Order); // Ajuste a lógica de ordenação conforme necessário
-        }
+        paginationQuery.Order = paginationQuery.Order ?? "id asc";
+        query = query.OrderBy(paginationQuery.Order);
 
         var totalCount = await query.CountAsync(cancellationToken); // Total de itens sem paginação
         var items = await query

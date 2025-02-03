@@ -4,6 +4,8 @@ using Ambev.Core.Domain.Entities;
 using Ambev.Core.Domain.Interfaces;
 using Ambev.Core.Domain.ValueObjects;
 using MediatR;
+using Ambev.Core.Domain.Enum;
+using System.Threading;
 
 namespace Ambev.Application.UseCases.Commands.User.CreateUser;
 
@@ -35,6 +37,30 @@ public class CreateUserHandler :
         user.ChangePassword(request.Password, _tokenService);
         user.UpdateName(request.Name.Firstname, request.Name.Lastname);
         var address = _mapper.Map<Address>(request.Address);
+
+        // Validação de UserStatus
+        if (!Enum.IsDefined(typeof(UserStatus), request.Status))
+        {
+            throw new InvalidOperationException($"Invalid UserStatus value: {request.Status}");
+        }
+
+        // Validação de UserRole
+        if (!Enum.IsDefined(typeof(UserRole), request.Role))
+        {
+            throw new InvalidOperationException($"Invalid UserRole value: {request.Role}");
+        }
+
+        var usernameAlredyInUse = await _userRepository.GetByLoginAsync(request.Username);
+        if (usernameAlredyInUse is not null)
+        {
+            throw new InvalidOperationException("The username is already taken.");
+        }
+
+        var emailAlredyInUse = await _userRepository.GetByEmailAsync(request.Email);
+        if (emailAlredyInUse is not null)
+        {
+            throw new InvalidOperationException("The email is already taken.");
+        }
 
         _userRepository.Create(user);
 

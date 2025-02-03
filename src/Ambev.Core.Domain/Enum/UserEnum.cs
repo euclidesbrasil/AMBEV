@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Ambev.Core.Domain.Enum
 {
-    public enum UserStatus { Active, Inactive, Suspended }
-    public enum UserRole { Customer, Manager, Admin }
+    public enum UserStatus { Active = 1, Inactive = 2, Suspended = 3 }
+    public enum UserRole { Customer = 1, Manager = 2, Admin = 3 }
 }

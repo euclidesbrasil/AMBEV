@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ambev.Core.Domain.Entities
 {
-    public class Sale:BaseEntity
+    public class Sale : BaseEntity
     {
         public int Id { get; set; }  // Identificador único da venda
         public string SaleNumber { get; set; } // Número da venda (ex: 20240201001)
@@ -16,18 +16,24 @@ namespace Ambev.Core.Domain.Entities
         public string UserFirstName { get; set; } // Nome do Cliente (desnormalizado)
         public int BranchId { get; set; }  // Identidade Externa da Filial
         public string BranchName { get; set; } // Nome da Filial (desnormalizado)
-        public decimal TotalAmount { get; set; } // Valor total da venda
         public bool IsCancelled { get; set; } // Indicador de cancelamento
-        public List<SaleItem> Items { get; set; } // Relacionamento com itens da venda
+        public List<SaleItem> Items { get; private set; } // Relacionamento com itens da venda
 
-       
+        public decimal TotalAmount
+        {
+            get
+            {
+                return Items?.Sum(item => item.TotalPrice) ?? 0;
+            }
+            private set { /* Necessário para o Entity Framework */ }
+        }
+
         public void Cancel()
         {
             IsCancelled = true;
             Items.ForEach(x =>
             {
                 x.IsCancelled = true;
-                x.TotalPrice = 0;
             });
         }
 
@@ -37,50 +43,103 @@ namespace Ambev.Core.Domain.Entities
             SaleDate = request.SaleDate;
             UserId = request.UserId;
             BranchId = request.BranchId;
-            TotalAmount = request.TotalAmount;
             IsCancelled = request.IsCancelled;
             UserId = user.Id;
             UserFirstName = user.Firstname;
         }
 
-        public void UpdateUserInfo( User user)
+        public void UpdateUserInfo(User user)
         {
             UserId = user.Id;
             UserFirstName = user.Firstname;
         }
+
+        public void ClearItems()
+        {
+            Items = new List<SaleItem>();
+        }
+
         public void UpdateItems(IEnumerable<SaleItem> items, IEnumerable<Product> productsUsed)
         {
             foreach (var itemDto in items)
             {
                 var itemToUpdate = Items.FirstOrDefault(i => i.Id == itemDto.Id);
+                if (itemToUpdate is null)
+                {
+                    throw new ArgumentNullException($"Item {itemDto.Id} not found");
+                }
 
-                if (itemToUpdate != null)
+                var product = productsUsed.FirstOrDefault(p => p.Id == itemDto.ProductId);
+
+                if(product is null)
                 {
-                    itemToUpdate.ProductId = itemDto.ProductId;
-                    itemToUpdate.ProductName = productsUsed.FirstOrDefault(p => p.Id == itemToUpdate.ProductId)?.Title;
-                    itemToUpdate.Quantity = itemDto.Quantity;
-                    itemToUpdate.UnitPrice = itemDto.UnitPrice;
-                    itemToUpdate.Discount = itemDto.Discount;
-                    itemToUpdate.TotalPrice = itemDto.TotalPrice;
-                    itemToUpdate.IsCancelled = itemDto.IsCancelled;
+                    throw new ArgumentNullException($"Product {itemDto.ProductId} not found");
                 }
-                else
+
+                itemToUpdate.ProductId = itemDto.ProductId;
+                itemToUpdate.ProductName = product.Title;
+                itemToUpdate.Quantity = itemDto.Quantity;
+                itemToUpdate.UnitPrice = product.Price;
+                itemToUpdate.Discount = itemDto.Discount;
+                itemToUpdate.IsCancelled = itemDto.IsCancelled;
+            }
+
+            // Apply rules
+            Items.ForEach(x =>
+            {
+                x.ApplyDiscount();
+                x.VerifyAllowedQuantity();
+            });
+        }
+
+        public void AddItems(IEnumerable<SaleItem> items, IEnumerable<Product> productsUsed)
+        {
+            foreach (var item in items)
+            {
+                var product = productsUsed.FirstOrDefault(p => p.Id == item.ProductId);
+                if (product is null)
                 {
-                    // Se o item não existir, pode ser adicionado, se necessário
-                    Items.Add(new SaleItem
-                    {
-                        Id = itemDto.Id,
-                        SaleId = this.Id,
-                        ProductId = itemDto.ProductId,
-                        ProductName = productsUsed.FirstOrDefault(p => p.Id == itemDto.ProductId)?.Title,
-                        Quantity = itemDto.Quantity,
-                        UnitPrice = itemDto.UnitPrice,
-                        Discount = itemDto.Discount,
-                        TotalPrice = itemDto.TotalPrice,
-                        IsCancelled = itemDto.IsCancelled
-                    });
+                    throw new ArgumentNullException($"Product {item.ProductId} not found");
                 }
+
+                // Se o item não existir, pode ser adicionado, se necessário
+                Items.Add(new SaleItem(item.SaleId, item.ProductId, product.Title, item.Quantity, product.Price, item.IsCancelled));
+            }
+
+            // Apply rules
+            Items.ForEach(x =>
+            {
+                x.ApplyDiscount();
+                x.VerifyAllowedQuantity();
+            });
+        }
+
+        public void ApplyBusinessRules()
+        {
+            var groupedItems = Items.Where(x=>!x.IsCancelled)
+                .GroupBy(i => i.ProductId)
+                .Select(g => new
+                {
+                    ProductId = g.Key,
+                    TotalQuantity = g.Sum(i => i.Quantity),
+                    Items = g.ToList()
+                });
+
+            foreach (var group in groupedItems)
+            {
+                if (group.TotalQuantity > 20)
+                {
+                    throw new InvalidOperationException($"The limit per item is 20 units for product {group.ProductId}.");
+                }
+
+                // Aplicar regras de desconto a cada item no grupo
+                group.Items.ForEach(x =>
+                {
+                    x.ApplyDiscount();
+                    x.VerifyAllowedQuantity();
+                });
             }
         }
+
     }
 }

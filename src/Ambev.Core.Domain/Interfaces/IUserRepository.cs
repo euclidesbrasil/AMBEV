@@ -12,5 +12,6 @@ namespace Ambev.Core.Domain.Interfaces
     {
         Task<User> GetByEmailAsync(string email);
         Task<User> GetByLoginAsync(string login);
+        Task<PaginatedResult<User>> GetUsersPagination(PaginationQuery paginationQuery, CancellationToken cancellationToken);
     }
 }
