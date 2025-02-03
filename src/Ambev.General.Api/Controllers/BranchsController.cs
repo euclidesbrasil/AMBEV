@@ -52,9 +52,14 @@ namespace Ambev.General.Api.Controllers
         }
 
         [HttpGet("/branchs")]
-        public async Task<ActionResult<List<GetBranchsQueryResponse>>> GetByCategories(CancellationToken cancellationToken, int _page = 1, int _size = 10, string _order = "id asc")
+        public async Task<ActionResult<List<GetBranchsQueryResponse>>> GetBranchsQuery(CancellationToken cancellationToken, int _page = 1, int _size = 10, [FromQuery] Dictionary<string, string> filters =  null, string _order = "id asc")
         {
-            var response = await _mediator.Send(new GetBranchsQueryRequest( _page, _size, _order), cancellationToken);
+            filters = filters ?? new Dictionary<string, string>();
+            filters = HttpContext.Request.Query
+            .Where(q => q.Key != "_page" && q.Key != "_size" && q.Key != "_order")
+            .ToDictionary(q => q.Key, q => q.Value.ToString());
+
+            var response = await _mediator.Send(new GetBranchsQueryRequest( _page, _size, _order, filters), cancellationToken);
             return Ok(response);
         }
     }

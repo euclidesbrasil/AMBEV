@@ -24,10 +24,14 @@ namespace Ambev.Infrastructure.Persistence.PostgreSQL.Configuration
             builder.Property(s => s.SaleDate)
                 .IsRequired();
 
-            builder.Property(s => s.UserId)
+            builder.Property(s => s.CustomerId)
                 .IsRequired();
 
-            builder.Property(s => s.UserFirstName)
+            builder.Property(s => s.CustomerFirstName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            builder.Property(s => s.CustomerLastName)
                 .IsRequired()
                 .HasMaxLength(200);
 

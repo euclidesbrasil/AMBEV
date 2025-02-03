@@ -30,7 +30,8 @@ namespace Ambev.Core.Application.UseCases.Queries.GetSalesQuery
             {
                 Order = request.order,
                 Page = request.page,
-                Size = request.size
+                Size = request.size,
+                Filter = request.filters
             }, cancellationToken);
 
             List<SaleWithDetaislsDTO> itensReturn = new List<SaleWithDetaislsDTO>();

@@ -10,6 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Ambev.Core.Application.UseCases.Queries.GetSaleById;
 using Ambev.Core.Application.UseCases.Queries.GetProductsByCategories;
 using Ambev.Core.Application.UseCases.DTOs;
+using System.Collections;
 
 namespace Ambev.Core.Application.UseCases.Queries.GetCustomersQuery
 { 
@@ -30,7 +31,8 @@ namespace Ambev.Core.Application.UseCases.Queries.GetCustomersQuery
             {
                 Order = request.order,
                 Page = request.page,
-                Size = request.size
+                Size = request.size,
+                Filter = request.filters
             }, cancellationToken);
 
             List<CustomerDTO> itensReturn = new List<CustomerDTO>();

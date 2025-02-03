@@ -12,8 +12,9 @@ namespace Ambev.Core.Domain.Entities
         public int Id { get; set; }  // Identificador único da venda
         public string SaleNumber { get; set; } // Número da venda (ex: 20240201001)
         public DateTime SaleDate { get; set; } // Data da venda
-        public int UserId { get; set; }  // Identidade Externa do Cliente
-        public string UserFirstName { get; set; } // Nome do Cliente (desnormalizado)
+        public int CustomerId { get; set; }  // Identidade Externa do Cliente
+        public string CustomerFirstName { get; set; } // Nome do Cliente (desnormalizado)
+        public string CustomerLastName { get; set; } // Nome do Cliente (desnormalizado)
         public int BranchId { get; set; }  // Identidade Externa da Filial
         public string BranchName { get; set; } // Nome da Filial (desnormalizado)
         public bool IsCancelled { get; set; } // Indicador de cancelamento
@@ -37,21 +38,15 @@ namespace Ambev.Core.Domain.Entities
             });
         }
 
-        public void Update(Sale request, User user)
+        public void Update(Sale request, Customer customer)
         {
             SaleNumber = request.SaleNumber;
             SaleDate = request.SaleDate;
-            UserId = request.UserId;
             BranchId = request.BranchId;
             IsCancelled = request.IsCancelled;
-            UserId = user.Id;
-            UserFirstName = user.Firstname;
-        }
-
-        public void UpdateUserInfo(User user)
-        {
-            UserId = user.Id;
-            UserFirstName = user.Firstname;
+            CustomerId = customer.Id;
+            CustomerFirstName = customer.FirstName;
+            CustomerLastName = customer.LastName;
         }
 
         public void ClearItems()

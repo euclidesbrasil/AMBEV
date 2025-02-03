@@ -21,7 +21,8 @@ public sealed class GetProductsByCategoriesHandler : IRequestHandler<GetProducts
         {
             Page = query.page,
             Size = query.size,
-            Order = query.order
+            Order = query.order,
+            Filter = query.filters
         };
 
         PaginatedResult<Product> listProduct = await _repository.GetProductsByCategoriesAsync(query.name, paginationQuery, cancellationToken);

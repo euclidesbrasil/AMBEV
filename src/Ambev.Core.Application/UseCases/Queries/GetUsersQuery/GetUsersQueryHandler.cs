@@ -30,7 +30,8 @@ namespace Ambev.Core.Application.UseCases.Queries.GetUsersQuery
             {
                 Order = request.order,
                 Page = request.page,
-                Size = request.size
+                Size = request.size,
+                Filter = request.filters
             }, cancellationToken);
 
             List<UserDTO> itensReturn = new List<UserDTO>();

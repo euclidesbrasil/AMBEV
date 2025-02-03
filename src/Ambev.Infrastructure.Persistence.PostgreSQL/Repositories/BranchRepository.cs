@@ -5,6 +5,7 @@ using Ambev.Core.Domain.Common;
 using System.Linq;
 using Ambev.Core.Domain.Entities;
 using System.Linq.Dynamic.Core;
+using Ambev.Infrastructure.Persistence.PostgreSQL.Extensions;
 
 namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories;
 
@@ -27,6 +28,8 @@ public class BranchRepository : BaseRepository<Branch>, IBranchRepository
     public async Task<PaginatedResult<Branch>> GetBranchPagination(PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
         var query = _context.Branches.Where(x => true);
+        // Aplicar filtros dinâmicos
+        query = query.ApplyFilters(paginationQuery.Filter);
 
         paginationQuery.Order = paginationQuery.Order ?? "id asc";
         query = query.OrderBy(paginationQuery.Order);

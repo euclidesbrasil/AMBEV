@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace Ambev.Core.Application.UseCases.Queries.GetSalesQuery
 {
-    public sealed record GetSalesQueryRequest(int page, int size, string order) : IRequest<GetSalesQueryResponse>;
+    public sealed record GetSalesQueryRequest(int page, int size, string order, Dictionary<string, string> filters = null) : IRequest<GetSalesQueryResponse>;
 }

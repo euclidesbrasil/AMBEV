@@ -16,20 +16,20 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISaleRepository _saleRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
         public UpdateSaleHandler(IUnitOfWork unitOfWork,
             ISaleRepository saleRepository,
-            IUserRepository userRepository,
+            ICustomerRepository customerRepository,
             IProductRepository productRepository,
             IMapper mapper
             )
         {
             _unitOfWork = unitOfWork;
             _saleRepository = saleRepository;
-            _userRepository = userRepository;
+            _customerRepository = customerRepository;
             _productRepository = productRepository;
             _mapper = mapper;
         }
@@ -38,9 +38,9 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             CancellationToken cancellationToken)
         {
             var sale = await _saleRepository.GetSaleWithItemsAsync(request.Id, cancellationToken);
-            var user = await _userRepository.Get(request.UserId, cancellationToken);
+            var customer = await _customerRepository.Get(request.CustomerId, cancellationToken);
             var saleToUpdate = _mapper.Map<Ambev.Core.Domain.Entities.Sale>(request);
-            sale.Update(saleToUpdate, user);
+            sale.Update(saleToUpdate, customer);
 
             List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();
             var productsUsed = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
@@ -49,7 +49,6 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             sale.AddItems(itens.Where(x => x.Id == 0).ToList(), productsUsed);
             sale.UpdateItems(itens.Where(x => x.Id != 0).ToList(), productsUsed);
 
-            sale.UserFirstName = user.Firstname;
             // TODO: FIX
             sale.BranchName = "Não nulo, pendente ajustar";
             _saleRepository.Update(sale);

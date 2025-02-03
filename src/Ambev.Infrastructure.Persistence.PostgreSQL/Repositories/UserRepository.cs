@@ -2,6 +2,7 @@
 using Ambev.Core.Domain.Entities;
 using Ambev.Core.Domain.Interfaces;
 using Ambev.Infrastructure.Persistence.PostgreSQL.Context;
+using Ambev.Infrastructure.Persistence.PostgreSQL.Extensions;
 using Ambev.Infrastructure.Persistence.PostgreSQL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories
 {
@@ -34,7 +36,7 @@ namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories
         public async Task<PaginatedResult<User>> GetUsersPagination(PaginationQuery paginationQuery, CancellationToken cancellationToken)
         {
             var query = _context.Users.Where(x => true);
-
+            query = query.ApplyFilters(paginationQuery.Filter);
             paginationQuery.Order = paginationQuery.Order ?? "id asc";
             query = query.OrderBy(paginationQuery.Order);
 

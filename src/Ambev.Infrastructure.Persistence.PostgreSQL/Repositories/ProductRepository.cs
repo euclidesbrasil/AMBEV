@@ -5,6 +5,7 @@ using Ambev.Core.Domain.Common;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Ambev.Core.Domain.Entities;
+using Ambev.Infrastructure.Persistence.PostgreSQL.Extensions;
 
 namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories;
 
@@ -26,7 +27,8 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 
     public async Task<PaginatedResult<Product>> GetProductsByCategoriesAsync(string nameCategory, PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
-        var query = _context.Products.Where(x => x.Category.Contains(nameCategory));
+        var query = _context.Products.Where(x => x.Category.Equals(nameCategory));
+        query = query.ApplyFilters(paginationQuery.Filter);
 
         paginationQuery.Order = paginationQuery.Order ?? "id asc";
         query = query.OrderBy(paginationQuery.Order);

@@ -5,6 +5,7 @@ using Ambev.Core.Domain.Common;
 using System.Linq;
 using Ambev.Core.Domain.Entities;
 using System.Linq.Dynamic.Core;
+using Ambev.Infrastructure.Persistence.PostgreSQL.Extensions;
 
 namespace Ambev.Infrastructure.Persistence.PostgreSQL.Repositories;
 
@@ -18,6 +19,8 @@ public class SaleRepository : BaseRepository<Sale>, ISaleRepository
     public async Task<PaginatedResult<Sale>> GetSalesPagination(PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
         var query = _context.Sales.Where(x => true);
+        query = query.ApplyFilters(paginationQuery.Filter);
+
         paginationQuery.Order = paginationQuery.Order ?? "id asc";
         query = query.OrderBy(paginationQuery.Order);
         var totalCount = await query.CountAsync(cancellationToken); // Total de itens sem paginação

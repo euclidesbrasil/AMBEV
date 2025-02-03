@@ -15,20 +15,20 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISaleRepository _saleRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
         public CreateSaleHandler(IUnitOfWork unitOfWork,
             ISaleRepository saleRepository,
-            IUserRepository userRepository,
+            ICustomerRepository customerRepository,
             IProductRepository productRepository,
             IMapper mapper
             )
         {
             _unitOfWork = unitOfWork;
             _saleRepository = saleRepository;
-            _userRepository = userRepository;
+            _customerRepository = customerRepository;
             _productRepository = productRepository;
             _mapper = mapper;
         }
@@ -37,10 +37,10 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
             CancellationToken cancellationToken)
         {
             var sale = _mapper.Map<Ambev.Core.Domain.Entities.Sale>(request);
-            var user = await _userRepository.Get(request.UserId, cancellationToken);
-            if(user is null)
+            var customer = await _customerRepository.Get(request.CustomerId, cancellationToken);
+            if(customer is null)
             {
-                throw new ArgumentNullException("User not found");
+                throw new ArgumentNullException("Customer not found");
             }
 
             List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();
@@ -50,7 +50,8 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
             sale.AddItems(itens, productsUsed);
             sale.ApplyBusinessRules();
 
-            sale.UserFirstName =user.Firstname;
+            sale.CustomerFirstName =customer.FirstName;
+            sale.CustomerLastName = customer.LastName;
             // TODO: FIX
             sale.BranchName = "Não nulo, pendente ajustar";
             _saleRepository.Create(sale);

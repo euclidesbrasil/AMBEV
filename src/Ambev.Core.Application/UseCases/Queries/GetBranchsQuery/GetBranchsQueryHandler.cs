@@ -19,18 +19,12 @@ namespace Ambev.Core.Application.UseCases.Queries.GetBranchsQuery
 
         public async Task<GetBranchsQueryResponse> Handle(GetBranchsQueryRequest query, CancellationToken cancellationToken)
         {
-            var paginationQuery = new PaginationQuery
-            {
-                Page = query.page,
-                Size = query.size,
-                Order = query.order
-            };
-
             PaginatedResult<Entities.Branch> listBranch = await _repository.GetBranchPagination(new PaginationQuery()
             {
                 Order = query.order,
                 Page = query.page,
-                Size = query.size
+                Size = query.size,
+                Filter = query.filters
             }, cancellationToken);
 
             return new GetBranchsQueryResponse()
