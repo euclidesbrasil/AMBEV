@@ -19,12 +19,14 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
         private readonly ISaleRepository _saleRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IBranchRepository _branchRepository;
         private readonly IMapper _mapper;
         private readonly IProducerMessage _producerMessage;
         public UpdateSaleHandler(IUnitOfWork unitOfWork,
             ISaleRepository saleRepository,
             ICustomerRepository customerRepository,
             IProductRepository productRepository,
+            IBranchRepository branchRepository,
             IMapper mapper,
             IProducerMessage producerMessage
             )
@@ -33,6 +35,7 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             _saleRepository = saleRepository;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
+            _branchRepository = branchRepository;
             _mapper = mapper;
             _producerMessage = producerMessage;
         }
@@ -45,10 +48,21 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             var salesItensNotCanceled = sale.Items.Where(x => !x.IsCancelled).Select(x => x.Id).ToList();
             var customer = await _customerRepository.Get(request.CustomerId, cancellationToken);
             var saleToUpdate = _mapper.Map<Entities.Sale>(request);
+            var branch = await _branchRepository.Get(saleToUpdate.BranchId, cancellationToken);
 
             sale.VerifyIfAllItensAreMine(allRequestItensIds);
             sale.VerifyIfAlreadyCanceled();
             sale.VerifyIfChangeSomeItemAlreadyCanceled(saleToUpdate.Items);
+
+            if (customer is null)
+            {
+                throw new KeyNotFoundException($"Customer with ID  {request.CustomerId} does not exist in our database");
+            }
+
+            if (branch is null)
+            {
+                throw new KeyNotFoundException($"Branch with ID  {request.BranchId} does not exist in our database");
+            }
 
             sale.Update(saleToUpdate, customer);
 
@@ -64,7 +78,7 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
 
 
             // TODO: FIX
-            sale.BranchName = "Não nulo, pendente ajustar";
+            sale.BranchName = branch.Name;
             _saleRepository.Update(sale);
 
             // Disparar eventos de mensageria

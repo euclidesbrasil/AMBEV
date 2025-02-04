@@ -16,12 +16,14 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
         private readonly ISaleRepository _saleRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IBranchRepository _branchRepository;
         private readonly IMapper _mapper;
         private readonly IProducerMessage _producerMessage;
         public CreateSaleHandler(IUnitOfWork unitOfWork,
             ISaleRepository saleRepository,
             ICustomerRepository customerRepository,
             IProductRepository productRepository,
+            IBranchRepository branchRepository,
             IMapper mapper,
             IProducerMessage producerMessage
             )
@@ -30,6 +32,7 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
             _saleRepository = saleRepository;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
+            _branchRepository = branchRepository;
             _mapper = mapper;
             _producerMessage = producerMessage;
         }
@@ -39,9 +42,15 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
         {
             var sale = _mapper.Map<Entities.Sale>(request);
             var customer = await _customerRepository.Get(request.CustomerId, cancellationToken);
+            var branch = await _branchRepository.Get(request.BranchId, cancellationToken);
             if(customer is null)
             {
-                throw new ArgumentNullException("Customer not found");
+                throw new KeyNotFoundException($"Customer with ID  {request.CustomerId} does not exist in our database");
+            }
+
+            if (branch is null)
+            {
+                throw new KeyNotFoundException($"Branch with ID  {request.BranchId} does not exist in our database");
             }
 
             List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();
@@ -54,7 +63,7 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
             sale.CustomerFirstName =customer.FirstName;
             sale.CustomerLastName = customer.LastName;
             // TODO: FIX
-            sale.BranchName = "Não nulo, pendente ajustar";
+            sale.BranchName = branch.Name;
             _saleRepository.Create(sale);
 
             var createdSaleEvent = sale.GetSaleCreatedEvent();
