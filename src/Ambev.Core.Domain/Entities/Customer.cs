@@ -17,11 +17,11 @@ namespace Ambev.Core.Domain.Entities
         /// </summary>
         public string Identification { get; set; }
 
-        public void Update(string first, string last, string Identification)
+        public void Update(string first, string last, string identification)
         {
             FirstName = first;
             LastName = last;
-            FirstName = Identification;
+            Identification = identification;
         }
     }
 }
