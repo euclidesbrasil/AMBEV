@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ambev.Core.Application\Ambev.Core.Application.csproj" />
     <ProjectReference Include="..\Ambev.Core.Domain\Ambev.Core.Domain.csproj" />
+    <ProjectReference Include="..\Ambev.Infrastructure.Messaging.RabbitMQ\Ambev.Infrastructure.Messaging.RabbitMQ.csproj" />
     <ProjectReference Include="..\Ambev.Infrastructure.Persistence.MongoDB\Ambev.Infrastructure.Persistence.MongoDB.csproj" />
     <ProjectReference Include="..\Ambev.Infrastructure.Persistence.PostgreSQL\Ambev.Infrastructure.Persistence.PostgreSQL.csproj" />
     <ProjectReference Include="..\Ambev.Infrastructure.Security\Ambev.Infrastructure.Security.csproj" />

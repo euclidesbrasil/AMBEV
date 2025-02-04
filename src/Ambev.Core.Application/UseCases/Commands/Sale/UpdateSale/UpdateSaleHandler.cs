@@ -1,5 +1,6 @@
 ﻿using Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale;
-using Ambev.Core.Domain.Entities;
+using Entities = Ambev.Core.Domain.Entities;
+using Ambev.Core.Domain.Event;
 using Ambev.Core.Domain.Interfaces;
 using AutoMapper;
 using MediatR;
@@ -19,12 +20,13 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-
+        private readonly IProducerMessage _producerMessage;
         public UpdateSaleHandler(IUnitOfWork unitOfWork,
             ISaleRepository saleRepository,
             ICustomerRepository customerRepository,
             IProductRepository productRepository,
-            IMapper mapper
+            IMapper mapper,
+            IProducerMessage producerMessage
             )
         {
             _unitOfWork = unitOfWork;
@@ -32,26 +34,54 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             _customerRepository = customerRepository;
             _productRepository = productRepository;
             _mapper = mapper;
+            _producerMessage = producerMessage;
         }
 
         public async Task<UpdateSaleResponse> Handle(UpdateSaleRequest request,
             CancellationToken cancellationToken)
         {
+            var allRequestItensIds = request.Items.Select(x => x.Id).ToList();
             var sale = await _saleRepository.GetSaleWithItemsAsync(request.Id, cancellationToken);
+            var salesItensNotCanceled = sale.Items.Where(x => !x.IsCancelled).Select(x => x.Id).ToList();
             var customer = await _customerRepository.Get(request.CustomerId, cancellationToken);
-            var saleToUpdate = _mapper.Map<Ambev.Core.Domain.Entities.Sale>(request);
+            var saleToUpdate = _mapper.Map<Entities.Sale>(request);
+
+            sale.VerifyIfAllItensAreMine(allRequestItensIds);
+            sale.VerifyIfAlreadyCanceled();
+            sale.VerifyIfChangeSomeItemAlreadyCanceled(saleToUpdate.Items);
+
             sale.Update(saleToUpdate, customer);
 
             List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();
             var productsUsed = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
 
-            List<SaleItem> itens =  _mapper.Map<List<Ambev.Core.Domain.Entities.SaleItem>>(request.Items);
-            sale.AddItems(itens.Where(x => x.Id == 0).ToList(), productsUsed);
-            sale.UpdateItems(itens.Where(x => x.Id != 0).ToList(), productsUsed);
+            List<Entities.SaleItem> itens =  _mapper.Map<List<Entities.SaleItem>>(request.Items);
+            var newItems = itens.Where(x => x.Id == 0).ToList();
+            var editItems = itens.Where(x => x.Id != 0).ToList();
+
+            sale.AddItems(newItems, productsUsed);
+            sale.UpdateItems(editItems, productsUsed);
+
 
             // TODO: FIX
             sale.BranchName = "Não nulo, pendente ajustar";
             _saleRepository.Update(sale);
+
+            // Disparar eventos de mensageria
+            var itemCanceledEvents = sale.GetItensCanceledEventsOnUpdateEvent(salesItensNotCanceled, sale.IsCancelled);
+            foreach (var itemCanceledEvent in itemCanceledEvents)
+            {
+                await _producerMessage.SendMessage(itemCanceledEvent, "sale.item.canceled");
+            }
+
+            var canceledSaleEvent = sale.GetSaleCanceledEvent();
+            if (canceledSaleEvent is not null)
+            {
+                await _producerMessage.SendMessage(canceledSaleEvent, "sale.canceled");
+            }
+
+            var modifiedSaleEvent = sale.GetSaleModifiedEvent();
+            await _producerMessage.SendMessage(modifiedSaleEvent, "sale.modified");
 
             await _unitOfWork.Commit(cancellationToken);
             return _mapper.Map<UpdateSaleResponse>(sale);

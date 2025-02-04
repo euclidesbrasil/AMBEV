@@ -42,7 +42,8 @@ namespace Ambev.Infrastructure.CrossCutting.IoC
                 return client.GetDatabase(settings.DatabaseName);
             });
 
-
+            
+            services.AddScoped<IProducerMessage, RabbitMQProducer>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();

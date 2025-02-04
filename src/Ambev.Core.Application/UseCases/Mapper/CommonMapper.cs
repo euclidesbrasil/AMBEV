@@ -18,7 +18,6 @@ using Ambev.Core.Application.UseCases.Queries.GetCartsQuery;
 using Ambev.Core.Application.UseCases.Queries.GetCartQueryId;
 using Ambev.Core.Application.UseCases.Queries.GetSaleById;
 using Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale;
-using Ambev.Core.Application.UseCases.Commands.Sale.CancelSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.CreateSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.CreateBranch;
 using Ambev.Core.Application.UseCases.Commands.Branch.UpdateBranch;
@@ -88,7 +87,6 @@ namespace Ambev.Core.Application.UseCases.Mapper
             CreateMap<Sale, UpdateSaleResponse>();
             CreateMap<Sale, CreateSaleResponse>();
             CreateMap<Sale, GetSaleByIdResponse>();
-            CreateMap<Sale,CancelSaleResponse>();
             CreateMap<SaleItem, SaleItemDTO>();
             CreateMap<SaleItem, SaleItemBaseDTO>();
             //Branch

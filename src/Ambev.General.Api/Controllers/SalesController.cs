@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Ambev.Core.Application.UseCases.Queries.GetProductCategories;
 using Ambev.Core.Application.UseCases.Queries.GetProductsByCategories;
 using Microsoft.AspNetCore.Authorization;
-using Ambev.Core.Application.UseCases.Commands.Sale.CancelSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale;
 using Ambev.Core.Application.UseCases.Commands.Sale.CreateSale;
 using Ambev.Core.Application.UseCases.Queries.GetUsersById;
@@ -35,16 +34,8 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSaleRequest request,
                                             CancellationToken cancellationToken)
     {
+        request.setIdContext(id);
         var response = await _mediator.Send(request, cancellationToken);
-        return Ok(response);
-    }
-
-    [HttpPut("/sales/cancel/{id}")]
-    public async Task<IActionResult> Cancel(int id,
-                                            CancellationToken cancellationToken)
-    {
-        var requestUpdate = new CancelSaleRequest(id);
-        var response = await _mediator.Send(requestUpdate, cancellationToken);
         return Ok(response);
     }
 

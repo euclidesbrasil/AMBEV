@@ -1,4 +1,5 @@
 ﻿using Ambev.Core.Domain.Common;
+using Ambev.Core.Domain.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,11 @@ namespace Ambev.Core.Domain.Entities
             CustomerId = customer.Id;
             CustomerFirstName = customer.FirstName;
             CustomerLastName = customer.LastName;
+
+            if (IsCancelled)
+            {
+                Cancel();
+            }
         }
 
         public void ClearItems()
@@ -134,6 +140,66 @@ namespace Ambev.Core.Domain.Entities
                     x.VerifyAllowedQuantity();
                 });
             }
+        }
+
+        public void VerifyIfAllItensAreMine(List<int> idsItensToVerify)
+        {
+            idsItensToVerify = idsItensToVerify ?? new List<int>();
+            idsItensToVerify = idsItensToVerify.Where(x => x != 0).ToList();
+            
+            var itensNotMine = Items.Where(x => !idsItensToVerify.Contains(x.Id)).ToList();
+
+            if(itensNotMine.Any())
+            {
+                throw new InvalidOperationException("Some itens are not from this sale");
+            }
+        }
+
+        public void VerifyIfChangeSomeItemAlreadyCanceled(IEnumerable<SaleItem> itemsRequest)
+        {
+            foreach(var request in itemsRequest)
+            {
+                var baseItem = Items.FirstOrDefault(x => x.Id == request.Id);
+                if(baseItem != null && baseItem.IsCancelled && !request.IsCancelled)
+                {
+                    throw new InvalidOperationException("It is not possible to reactivate a canceled item sale.");
+                }
+            }
+        }
+
+        public void VerifyIfAlreadyCanceled()
+        {
+            if(IsCancelled)
+            {
+                throw new InvalidOperationException("Sale already canceled");
+            }
+        }
+
+        public IEnumerable<ItemCanceledEvent> GetItensCanceledEventsOnUpdateEvent(List<int> salesItensNotCanceled, bool isCanceledSale)
+        {
+            return Items
+                .Where(item => item.IsCancelled && salesItensNotCanceled.Contains(item.Id))
+                .Select(item => item.CreateItemCanceledEvent(isCanceledSale))
+                .Where(e => e != null);
+        }
+
+        public SaleCanceledEvent GetSaleCanceledEvent()
+        {
+            if (IsCancelled)
+            {
+                return new SaleCanceledEvent(this, "Sale canceled");
+            }
+            return null;
+        }
+
+        public SaleModifiedEvent GetSaleModifiedEvent()
+        {
+            return new SaleModifiedEvent(this, "Sale modified");
+        }
+
+        public SaleModifiedEvent GetSaleCreatedEvent()
+        {
+            return new SaleModifiedEvent(this, "Sale created");
         }
 
     }

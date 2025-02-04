@@ -28,6 +28,11 @@ namespace Ambev.Core.Application.UseCases.DTOs
                 return totalPrice;
             }
         }
-        public bool IsCancelled { get; set; } // Indicador se o item foi cancelado
+        public bool IsCancelled { get; internal set; } // Indicador se o item foi cancelado
+
+        public void setItemAsCancelled()
+        {
+            IsCancelled = true;
+        }
     }
 }

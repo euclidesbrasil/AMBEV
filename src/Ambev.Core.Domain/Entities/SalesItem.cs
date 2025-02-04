@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ambev.Core.Domain.Event;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -89,6 +90,15 @@ namespace Ambev.Core.Domain.Entities
             {
                 throw new InvalidOperationException("The limit per item is 20 units.");
             }
+        }
+
+        public ItemCanceledEvent CreateItemCanceledEvent(bool isCanceledSale)
+        {
+            if (IsCancelled || isCanceledSale)
+            {
+                return new ItemCanceledEvent(this, "Item canceled");
+            }
+            return null;
         }
     }
 }
