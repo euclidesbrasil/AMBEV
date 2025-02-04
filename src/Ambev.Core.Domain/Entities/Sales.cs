@@ -19,7 +19,7 @@ namespace Ambev.Core.Domain.Entities
         public int BranchId { get; set; }  // Identidade Externa da Filial
         public string BranchName { get; set; } // Nome da Filial (desnormalizado)
         public bool IsCancelled { get; set; } // Indicador de cancelamento
-        public List<SaleItem> Items { get; private set; } // Relacionamento com itens da venda
+        public List<SaleItem> Items { get; set; } // Relacionamento com itens da venda
 
         public decimal TotalAmount
         {

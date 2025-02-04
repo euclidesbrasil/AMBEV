@@ -7,4 +7,5 @@ public interface IProductRepository : IBaseRepository<Product>
 {
     Task<List<string>> GetProductCategoriesAsync(CancellationToken cancellationToken);
     Task<PaginatedResult<Product>> GetProductsByCategoriesAsync(string nameCategory, PaginationQuery paginationQuery, CancellationToken cancellationToken);
+    Task<List<Product>> GetProductByListIdsAsync(List<int> ids, CancellationToken cancellationToken);
 }

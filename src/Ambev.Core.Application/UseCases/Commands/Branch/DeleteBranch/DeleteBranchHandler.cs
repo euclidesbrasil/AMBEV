@@ -28,7 +28,7 @@ public class DeleteBranchHandler : IRequestHandler<DeleteBranchRequest, DeleteBr
 
         if (branch is null)
         {
-            throw new KeyNotFoundException($"Branch with ID  {request.id} does not exist in our database");
+            throw new KeyNotFoundException($"Branch with ID {request.id} does not exist in our database");
         }
 
         _branchRepository.Delete(branch);

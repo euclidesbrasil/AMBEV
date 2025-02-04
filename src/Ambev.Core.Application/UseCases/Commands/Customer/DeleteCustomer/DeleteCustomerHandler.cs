@@ -27,12 +27,12 @@ public class DeleteCustomerHandler : IRequestHandler<DeleteCustomerRequest, Dele
 
         if (customer == null)
         {
-            throw new KeyNotFoundException($"Custumer with ID  {request.id} does not exist in our database");
+            throw new KeyNotFoundException($"Custumer with ID {request.id} does not exist in our database");
         }
 
         _custumerRepository.Delete(customer);
         await _unitOfWork.Commit(cancellationToken);
-        var userResponse = _mapper.Map<Ambev.Core.Domain.Entities.Customer, DeleteCustomerResponse>(customer);
+        DeleteCustomerResponse userResponse = _mapper.Map<DeleteCustomerResponse>(customer);
         return userResponse;
     }
 }

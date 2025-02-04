@@ -32,7 +32,7 @@ namespace Ambev.Core.Application.UseCases.Commands.Branch.UpdateBranch
             Entities.Branch branch = await _branchRepository.Get(request.Id, cancellationToken);
             if(branch is null)
             {
-               throw new KeyNotFoundException($"Branch with ID  {request.Id} does not exist in our database");
+               throw new KeyNotFoundException($"Branch with ID {request.Id} does not exist in our database");
             }
 
             branch.Update(request.Name, request.Location);

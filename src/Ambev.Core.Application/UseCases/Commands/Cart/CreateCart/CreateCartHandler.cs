@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ambev.Core.Domain.Entities;
+using Entities = Ambev.Core.Domain.Entities;
 using Ambev.Core.Domain.Interfaces;
 using Ambev.Core.Domain.ValueObjects;
 using MediatR;
@@ -30,15 +30,15 @@ namespace Ambev.Application.UseCases.Commands.Cart.CreateCart
             new CartItem(p.ProductId, p.Quantity)).ToList());
 
             var idsProducts = cart.Products.Select(x => x.ProductId).Distinct().ToList();
-            var allProducts = await _productRepository.Filter(x => idsProducts.Contains(x.Id), cancellationToken);
+            var allProducts = await _productRepository.GetProductByListIdsAsync(idsProducts, cancellationToken);
+            allProducts = allProducts ?? new List<Core.Domain.Entities.Product>();
             var productsNotSavedInDataBase = idsProducts.Except(allProducts.Select(p => p.Id)).ToList();
             if (productsNotSavedInDataBase.Count > 0)
             {
                 throw new ArgumentNullException($"Products not found ({string.Join(",", productsNotSavedInDataBase.Distinct())}).");
             }
             await _cartRepository.Create(cart);
-            var cartSaved = _mapper.Map<Ambev.Core.Domain.Entities.Cart, CreateCartResponse>(cart);
-            return cartSaved;
+            return _mapper.Map<CreateCartResponse>(cart);
         }
     }
 }

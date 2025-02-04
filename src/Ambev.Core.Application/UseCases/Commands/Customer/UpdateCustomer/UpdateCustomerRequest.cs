@@ -5,11 +5,6 @@ namespace Ambev.Application.UseCases.Commands.Customer.UpdateCustomer
 {
     public class UpdateCustomerRequest : CustomerDTO, IRequest<UpdateCustomerResponse>
     {
-        public int Id { get; internal set; }
-
-        public void Update(int id)
-        {
-            Id = id;
-        }
+        public int Id { get; set; }
     }
 }

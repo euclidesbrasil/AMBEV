@@ -27,7 +27,7 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductRequest, Delete
 
         if (product == null)
         {
-            throw new KeyNotFoundException($"Product with ID  {request.id} does not exist in our database");
+            throw new KeyNotFoundException($"Product with ID {request.id} does not exist in our database");
         }
 
         _productRepository.Delete(product);

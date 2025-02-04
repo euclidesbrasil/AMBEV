@@ -5,13 +5,13 @@ using Ambev.Core.Domain.Entities;
 
 namespace Ambev.Application.UseCases.Commands.User.DeleteUser;
 
-public class DeleteCartHandler : IRequestHandler<DeleteUserRequest, DeleteUserResponse>
+public class DeleteUserHandler : IRequestHandler<DeleteUserRequest, DeleteUserResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public DeleteCartHandler(IUnitOfWork unitOfWork,
+    public DeleteUserHandler(IUnitOfWork unitOfWork,
         IUserRepository productRepository,
         IMapper mapper
         )
@@ -32,7 +32,6 @@ public class DeleteCartHandler : IRequestHandler<DeleteUserRequest, DeleteUserRe
 
         _userRepository.Delete(user);
         await _unitOfWork.Commit(cancellationToken);
-        var userResponse = _mapper.Map<Ambev.Core.Domain.Entities.User, DeleteUserResponse>(user);
-        return userResponse;
+        return _mapper.Map<DeleteUserResponse>(user);
     }
 }

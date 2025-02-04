@@ -31,7 +31,7 @@ namespace Ambev.General.Api.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] UpdateCustomerRequest request,
                                                 CancellationToken cancellationToken)
         {
-            request.Update(id);
+            request.Id = id;
             var response = await _mediator.Send(request, cancellationToken);
             return Ok(response);
         }
@@ -45,7 +45,7 @@ namespace Ambev.General.Api.Controllers
         }
 
         [HttpGet("/customers/{id}")]
-        public async Task<IActionResult> GetById(int id,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(new GetCustomerByIdRequest(id), cancellationToken);
             return Ok(response);
@@ -59,7 +59,7 @@ namespace Ambev.General.Api.Controllers
             .Where(q => q.Key != "_page" && q.Key != "_size" && q.Key != "_order")
             .ToDictionary(q => q.Key, q => q.Value.ToString());
 
-            var response = await _mediator.Send(new GetCustomersQueryRequest( _page, _size, _order, filters), cancellationToken);
+            var response = await _mediator.Send(new GetCustomersQueryRequest(_page, _size, _order, filters), cancellationToken);
             return Ok(response);
         }
     }

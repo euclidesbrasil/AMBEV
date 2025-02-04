@@ -16,5 +16,10 @@ namespace Ambev.Core.Application.UseCases.DTOs
         /// RG, CPF, CNPJ ...
         /// </summary>
         public string Identification { get; set; }
+
+        public void setIdContext(int id)
+        {
+            Id = id;
+        }
     }
 }

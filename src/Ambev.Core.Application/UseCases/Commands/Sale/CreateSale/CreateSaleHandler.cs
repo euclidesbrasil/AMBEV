@@ -45,12 +45,12 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
             var branch = await _branchRepository.Get(request.BranchId, cancellationToken);
             if(customer is null)
             {
-                throw new KeyNotFoundException($"Customer with ID  {request.CustomerId} does not exist in our database");
+                throw new KeyNotFoundException($"Customer with ID {request.CustomerId} does not exist in our database");
             }
 
             if (branch is null)
             {
-                throw new KeyNotFoundException($"Branch with ID  {request.BranchId} does not exist in our database");
+                throw new KeyNotFoundException($"Branch with ID {request.BranchId} does not exist in our database");
             }
 
             List<int> idsProducts = request.Items.Select(i => i.ProductId).ToList();

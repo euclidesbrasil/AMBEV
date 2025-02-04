@@ -25,6 +25,13 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<Product>> GetProductByListIdsAsync(List<int> ids, CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<PaginatedResult<Product>> GetProductsByCategoriesAsync(string nameCategory, PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
         var query = _context.Products.Where(x => x.Category.Equals(nameCategory));
