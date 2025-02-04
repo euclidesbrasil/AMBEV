@@ -5,11 +5,13 @@ using Ambev.Core.Application.UseCases.Queries.GetCartQueryId;
 using Ambev.Application.UseCases.Commands.Cart.CreateCart;
 using Ambev.Application.UseCases.Commands.Cart.UpdateCart;
 using Ambev.Application.UseCases.Commands.Cart.DeleteCart;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ambev.General.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class CartsController : ControllerBase
     {
         private readonly IMediator _mediator;

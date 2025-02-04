@@ -13,6 +13,7 @@ namespace Ambev.General.Api.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class SalesController : ControllerBase
 {
     private readonly IMediator _mediator;

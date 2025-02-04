@@ -5,11 +5,13 @@ using Ambev.Core.Application.UseCases.Queries.GetCustomersQuery;
 using Ambev.Core.Application.UseCases.Queries.GetCustomerById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ambev.General.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomersController : ControllerBase
     {
         private readonly IMediator _mediator;

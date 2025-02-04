@@ -4,11 +4,13 @@ using Ambev.Application.UseCases.Commands.User.UpdateUser;
 using Ambev.Application.UseCases.Commands.User.CreateUser;
 using Ambev.Core.Application.UseCases.Queries.GetUsersById;
 using Ambev.Core.Application.UseCases.Queries.GetUsersQuery;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ambev.General.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;

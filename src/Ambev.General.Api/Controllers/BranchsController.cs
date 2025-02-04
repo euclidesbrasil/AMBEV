@@ -10,6 +10,7 @@ namespace Ambev.General.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [authorization]
     public class BranchsController : ControllerBase
     {
         private readonly IMediator _mediator;
