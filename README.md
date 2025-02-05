@@ -1,4 +1,4 @@
-# General API - Users, Product, Sales, and Cart
+# General API - Sales Management
 
 ## 📌 Description
 
