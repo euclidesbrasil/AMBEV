@@ -1,3 +1,114 @@
+# General API - Users, Product, Sales, and Cart
+
+## 📌 Description
+
+This API provides resources for managing users, products, sales, and shopping carts.
+
+## 🛠 Technologies Used
+
+- .NET 8
+- PostgreSQL
+- MongoDB
+- RabbitMQ
+
+## 📋 Prerequisites
+
+Clone this project, using the web URL: https://github.com/euclidesbrasil/AMBEV.git
+
+Before downloading the project, make sure you have installed:
+
+- **Visual Studio** (Version used: Microsoft Visual Studio Community 2022 - Version 17.10.1, preferably after version 17.8)
+- **PostgreSQL** (Version used: 17.2-3) [Download here](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+- **MongoDB Community** (Version used: 7.0.16) [Download here](https://www.mongodb.com/try/download/community-edition/releases)
+- **RabbitMQ** (Version used: 4.0.5) [Download here](https://www.rabbitmq.com/docs/install-windows)
+
+## 🚀 Setup Before Running
+
+### 1. PostgreSQL Configuration
+
+In the **Ambev.General.Api** project, open the `appsettings.json` file and adjust the `DefaultConnection` section with your local database credentials:
+
+```json
+"DefaultConnection": "Host=localhost;Port=5432;Database=AMBEVDOTNET;Username=postgres;Password=admin"
+```
+
+### 2. MongoDB Configuration
+
+In the same `appsettings.json` file, there is a `ConnectionString` section that defines the connection to MongoDB. Adjust it if necessary according to your environment.
+
+### 3. Running the Project
+
+Simply run the project to start the API. On the first execution, the database will be created automatically and initial data will be loaded.
+
+## 🔐 Authentication
+
+To use the endpoints, you need to obtain an authentication token. Use the initial credentials:
+
+- **Username:** admin
+- **Password:** @mbev
+
+### Obtaining the Token:
+Make a POST request to the `/auth/login` endpoint with the following payload:
+
+```json
+{
+  "username": "admin",
+  "password": "@mbev"
+}
+```
+
+The API will return a JWT token, which should be used in authenticated requests.
+
+## 📌 Available Endpoints
+
+### 🔹 Authentication
+- `POST /auth/login` - Obtain a JWT token for authentication.
+
+### 🔹 Branches
+- `GET /branchs/{id}` - Get a branch by ID.
+- `GET /branchs` - List all branches.
+- `POST /Branchs` - Create a new branch.
+- `PUT /Branchs?id={id}` - Update an existing branch.
+- `DELETE /Branchs?id={id}` - Delete a branch.
+
+### 🔹 Carts
+- `GET /Carts` - List all carts.
+- `GET /carts/{id}` - Get a cart by ID.
+- `POST /Carts` - Create a new cart.
+- `PUT /carts/{id}` - Update a cart.
+- `DELETE /carts/{id}` - Delete a cart.
+
+### 🔹 Customers
+- `GET /customers` - List all customers.
+- `GET /customers/{id}` - Get a customer by ID.
+- `POST /Customers` - Create a new customer.
+- `PUT /Customers?id={id}` - Update an existing customer.
+- `DELETE /Customers?id={id}` - Delete a customer.
+
+### 🔹 Products
+- `GET /products/categories` - List product categories.
+- `GET /products/category/{category}` - List products by category.
+- `POST /Products` - Create a new product.
+- `PUT /Products?id={id}` - Update a product.
+- `DELETE /Products?id={id}` - Delete a product.
+
+### 🔹 Sales
+- `GET /sales` - List all sales.
+- `GET /sales/{id}` - Get a sale by ID.
+- `POST /Sales` - Create a new sale.
+- `PUT /Sales?id={id}` - Update an existing sale.
+
+### 🔹 Users
+- `GET /users` - List all users.
+- `GET /users/{id}` - Get a user by ID.
+- `POST /Users` - Create a new user.
+- `PUT /Users?id={id}` - Update a user.
+
+## 📄 License
+
+This project is licensed under the MIT license.
+
+
 # Developer Evaluation Project
 
 `READ CAREFULLY`
