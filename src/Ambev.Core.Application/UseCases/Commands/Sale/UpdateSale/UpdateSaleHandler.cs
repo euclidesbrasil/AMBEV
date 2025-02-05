@@ -76,10 +76,9 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             sale.AddItems(newItems, productsUsed);
             sale.UpdateItems(editItems, productsUsed);
 
-
-            // TODO: FIX
             sale.BranchName = branch.Name;
             _saleRepository.Update(sale);
+            await _unitOfWork.Commit(cancellationToken);
 
             // Disparar eventos de mensageria
             var itemCanceledEvents = sale.GetItensCanceledEventsOnUpdateEvent(salesItensNotCanceled, sale.IsCancelled);
@@ -97,7 +96,6 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
             var modifiedSaleEvent = sale.GetSaleModifiedEvent();
             await _producerMessage.SendMessage(modifiedSaleEvent, "sale.modified");
 
-            await _unitOfWork.Commit(cancellationToken);
             return _mapper.Map<UpdateSaleResponse>(sale);
         }
     }

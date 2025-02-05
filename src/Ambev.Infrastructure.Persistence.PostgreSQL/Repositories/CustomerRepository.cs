@@ -18,7 +18,7 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     }
     public async Task<PaginatedResult<Customer>> GetCustumerPagination(PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
-        var query = _context.Custumer.Where(x => true);
+        var query = _context.Customers.Where(x => true);
         query = query.ApplyFilters(paginationQuery.Filter);
 
         paginationQuery.Order = paginationQuery.Order ?? "id asc";

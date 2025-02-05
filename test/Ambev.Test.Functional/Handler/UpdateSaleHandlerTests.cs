@@ -54,7 +54,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Arrange
             var request = new UpdateSaleRequest
             {
-                Id = 1,
                 CustomerId = 1,
                 BranchId = 1,
                 Items = new List<UpdateSaleItemRequest>
@@ -63,6 +62,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                     new UpdateSaleItemRequest { ProductId = 2, Quantity = 2, Id=2 },
                 }
             };
+            request.SetId(1);
             var saleToUpdate = new Sale
             {
                 Id = 1,
@@ -145,7 +145,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Arrange
             var request = new UpdateSaleRequest
             {
-                Id = 1,
                 CustomerId = 999,
                 BranchId = 1,
                 Items = new List<UpdateSaleItemRequest>()
@@ -154,6 +153,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 new UpdateSaleItemRequest { ProductId = 2, Quantity = 3, Id =2 }
                 }
             };
+            request.SetId(1);
             var saleToUpdate = new Sale
             {
                 Id = 1,
@@ -213,10 +213,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
         public async Task Handle_InvalidBranch_ShouldThrowKeyNotFoundException()
         {
             // Arrange
-            // Arrange
             var request = new UpdateSaleRequest
             {
-                Id = 1,
                 CustomerId = 1,
                 BranchId = 998,
                 Items = new List<UpdateSaleItemRequest>()
@@ -225,6 +223,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 new UpdateSaleItemRequest { ProductId = 2, Quantity = 3, Id =2 }
                 }
             };
+            request.SetId(1);
             var saleToUpdate = new Sale
             {
                 Id = 1,

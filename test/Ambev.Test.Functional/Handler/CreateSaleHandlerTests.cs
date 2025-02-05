@@ -99,7 +99,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             await _productRepository.Received(1).Filter(Arg.Any<Expression<Func<Product, bool>>>(), Arg.Any<CancellationToken>());
             _saleRepository.Received(1).Create(sale);
             await _producerMessage.Received(1).SendMessage(Arg.Any<object>(), "sale.created");
-            await _unitOfWork.Received(1).Commit(Arg.Any<CancellationToken>());
+            await _unitOfWork.Received(2).Commit(Arg.Any<CancellationToken>());
         }
 
         [Fact]

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ambev.Core.Domain.Aggregate;
+
 using Ambev.Core.Domain.Entities;
 using Ambev.Core.Domain.Interfaces;
 using Ambev.Core.Domain.ValueObjects;
@@ -35,7 +35,7 @@ public class CreateUserHandler :
 
         var user = _mapper.Map<Ambev.Core.Domain.Entities.User>(request);
         user.ChangePassword(request.Password, _tokenService);
-        user.UpdateName(request.Name.Firstname, request.Name.Lastname);
+        user.UpdateName(request.Firstname, request.Lastname);
         var address = _mapper.Map<Address>(request.Address);
 
         // Validação de UserStatus

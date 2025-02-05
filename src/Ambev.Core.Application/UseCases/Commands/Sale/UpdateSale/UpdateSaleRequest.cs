@@ -10,9 +10,13 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.UpdateSale
 {
     public class UpdateSaleRequest : SaleDTO, IRequest<UpdateSaleResponse>
     {
-        public int Id { get;  set; }
+        public int Id { get;  internal set; }
         public List<UpdateSaleItemRequest> Items { get; set; }
         public bool IsCancelled { get; set; } // Override para cancelamento do item
+        public void SetId(int id)
+        {
+            Id = id;
+        }
     }
 
     public class UpdateSaleItemRequest : SaleItemBaseDTO

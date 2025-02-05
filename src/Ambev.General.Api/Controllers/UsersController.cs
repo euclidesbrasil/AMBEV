@@ -33,7 +33,7 @@ namespace Ambev.General.Api.Controllers
         public async Task<ActionResult<UpdateUserResponse>> Update(int id, [FromBody] UpdateUserRequest request,
                                                 CancellationToken cancellationToken)
         {
-            request.Id = id;
+            request.UpdateId(id);
             var response = await _mediator.Send(request, cancellationToken);
             return Ok(response);
         }

@@ -38,7 +38,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Arrange
             var request = new CreateProductRequest { Category = "category", Description = "desc", Image = "http://image.com", Price = 10, Rating = new Core.Application.UseCases.DTOs.RatingDTO() { Count = 1, Rate = 2 }, Title = "title" };
             var product = new Product(1, "title", 10, "desc", "category", "http://image.com", new Core.Domain.ValueObjects.Rating(1, 2));
-            var response = new CreateProductResponse { Id = 1, Category = "category", Description = "desc", Image = "http://image.com", Price = 10, Rating = new Core.Application.UseCases.DTOs.RatingDTO() { Count = 1, Rate = 2 }, Title = "title" };
+            var response = new CreateProductResponse { Id = 1, Category = "category", Description = "desc", Image = "http://image.com", Price = 10, Rating = new CreateProductRatingResponse { Count = 1, Rate = 2 }, Title = "title" };
 
             _mapper.Map<Product>(request).Returns(product);
             _mapper.Map<CreateProductResponse>(product).Returns(response);

@@ -42,7 +42,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 Username = "testuser",
                 Email = "test@example.com",
                 Password = "Password123",
-                Name = new Core.Application.UseCases.DTOs.NameDto { Firstname = "Test", Lastname = "User" },
+                Firstname = "Test", 
+                Lastname = "User",
                 Address = new Core.Application.UseCases.DTOs.AddressDto() { City = "City", Geolocation = new Core.Application.UseCases.DTOs.GeolocationDto() { Lat = "1.0", Long = "2.0" }, Number = 1, Street = "Street", Zipcode = "606060660" },
                 Status = UserStatus.Active,
                 Role = UserRole.Admin
@@ -77,7 +78,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 Username = "testuser",
                 Email = "test@example.com",
                 Password = "Password123",
-                Name = new Core.Application.UseCases.DTOs.NameDto { Firstname = "Test", Lastname = "User" },
+                Firstname = "Test", 
+                Lastname = "User",
                 Address = new Core.Application.UseCases.DTOs.AddressDto() { City = "City", Geolocation = new Core.Application.UseCases.DTOs.GeolocationDto() { Lat = "1.0", Long = "2.0" }, Number = 1, Street = "Street", Zipcode = "606060660" },
                 Status = UserStatus.Active,
                 Role = UserRole.Admin
@@ -107,7 +109,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 Username = "testuser",
                 Email = "test@example.com",
                 Password = "Password123",
-                Name = new Core.Application.UseCases.DTOs.NameDto { Firstname = "Test", Lastname = "User" },
+                Firstname = "Test",
+                Lastname = "User",
                 Address = new Core.Application.UseCases.DTOs.AddressDto() { City = "City", Geolocation = new Core.Application.UseCases.DTOs.GeolocationDto() { Lat = "1.0", Long = "2.0" }, Number = 1, Street = "Street", Zipcode = "606060660" },
                 Status = UserStatus.Active,
                 Role = UserRole.Admin

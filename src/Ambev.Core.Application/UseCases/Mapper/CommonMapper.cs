@@ -48,6 +48,7 @@ namespace Ambev.Core.Application.UseCases.Mapper
             .ForMember(dest => dest.Long, opt => opt.MapFrom(src => src.Longitude));
 
             CreateMap<RatingDTO, Rating>();
+            CreateMap<Rating, RatingDTO>();
 
             // Carts...
             CreateMap<Cart, GetCartsQueryDataResponse>();
@@ -60,8 +61,11 @@ namespace Ambev.Core.Application.UseCases.Mapper
             //Product
             CreateMap<CreateProductRequest, Product>();
             CreateMap<Product, CreateProductResponse>();
+            CreateMap<Rating, CreateProductRatingResponse>();
             CreateMap<UpdateProductRequest, Product>();
             CreateMap<Product, UpdateProductResponse>();
+            CreateMap<Rating, UpdateProductRatingResponse>();
+            
             //User
             CreateMap<CreateUserRequest, User>();
             CreateMap<User, CreateUserResponse>();

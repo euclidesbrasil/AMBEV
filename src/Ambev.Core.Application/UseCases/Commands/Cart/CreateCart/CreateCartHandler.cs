@@ -15,12 +15,14 @@ namespace Ambev.Application.UseCases.Commands.Cart.CreateCart
     {
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public CreateCartHandler(ICartRepository cartRepository, IProductRepository productRepository, IMapper mapper)
+        public CreateCartHandler(ICartRepository cartRepository, IProductRepository productRepository, IUserRepository userRepository, IMapper mapper)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
@@ -28,7 +30,11 @@ namespace Ambev.Application.UseCases.Commands.Cart.CreateCart
         {
             var cart = new Ambev.Core.Domain.Entities.Cart(request.UserId, request.Date, request.Products.Select(p =>
             new CartItem(p.ProductId, p.Quantity)).ToList());
-
+            var user = await _userRepository.Get(request.UserId, cancellationToken);
+            if(user is null)
+            {
+                throw new KeyNotFoundException($"User with ID {request.UserId} does not exist in our database");
+            }
             var idsProducts = cart.Products.Select(x => x.ProductId).Distinct().ToList();
             var allProducts = await _productRepository.GetProductByListIdsAsync(idsProducts, cancellationToken);
             allProducts = allProducts ?? new List<Core.Domain.Entities.Product>();

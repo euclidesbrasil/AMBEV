@@ -35,7 +35,7 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSaleRequest request,
                                             CancellationToken cancellationToken)
     {
-        request.Id = id;
+        request.SetId(id);
         var response = await _mediator.Send(request, cancellationToken);
         return Ok(response);
     }

@@ -4,13 +4,14 @@ using Ambev.Core.Application.UseCases.Commands.Branch.UpdateBranch;
 using Ambev.Core.Application.UseCases.Commands.Sale.CreateBranch;
 using Ambev.Core.Application.UseCases.Queries.GetBranchsQuery;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ambev.General.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [authorization]
+    [Authorize]
     public class BranchsController : ControllerBase
     {
         private readonly IMediator _mediator;

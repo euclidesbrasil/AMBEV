@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ambev.Core.Domain.Aggregate;
+
 using Ambev.Core.Domain.Entities;
 using Ambev.Core.Domain.Interfaces;
 using MediatR;
@@ -31,10 +31,10 @@ public class UpdateUserHandler :
     {
 
         var user = _mapper.Map<Ambev.Core.Domain.Entities.User>(request);
-        user.UpdateName(request.Name.Firstname, request.Name.Lastname);
+        user.UpdateName(request.Firstname, request.Lastname);
         user.ChangePassword(request.Password, _tokenService);
         _userRepository.Update(user);
         await _unitOfWork.Commit(cancellationToken);
-        return _mapper.Map<UpdateUserResponse>(request);
+        return _mapper.Map<UpdateUserResponse>(user);
     }
 }

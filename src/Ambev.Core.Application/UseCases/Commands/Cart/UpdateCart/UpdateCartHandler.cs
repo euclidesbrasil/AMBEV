@@ -14,11 +14,13 @@ public class UpdateCartHandler :
     private readonly ICartRepository _cartRepository;
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
-    public UpdateCartHandler(ICartRepository cartRepository, IProductRepository productRepository, IUnitOfWork unitOfWork, IMapper mapper)
+    public UpdateCartHandler(ICartRepository cartRepository, IProductRepository productRepository, IUnitOfWork unitOfWork, IUserRepository userRepository, IMapper mapper)
     {
         _cartRepository = cartRepository;
         _productRepository = productRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
@@ -28,9 +30,15 @@ public class UpdateCartHandler :
     {
 
         var carts = await _cartRepository.Filter(x => x.Id == request.GetIdContext(), cancellationToken);
+        var user = await _userRepository.Get(request.UserId, cancellationToken);
         if (carts == null || carts.Count == 0)
         {
             throw new KeyNotFoundException($"Cart with ID  {request.Id} does not exist in our database");
+        }
+
+        if (user is null)
+        {
+            throw new KeyNotFoundException($"User with ID {request.UserId} does not exist in our database");
         }
 
         var cartUpdate = carts.FirstOrDefault();
@@ -48,6 +56,8 @@ public class UpdateCartHandler :
         {
             throw new KeyNotFoundException($"Products with ID {string.Join(",", productsNotSavedInDataBase.Distinct())} does not exist in our database");
         }
+
+
 
         cartUpdate.RemoveAllProducts();
         cartUpdate.Update(request.UserId, request.Date, itens);

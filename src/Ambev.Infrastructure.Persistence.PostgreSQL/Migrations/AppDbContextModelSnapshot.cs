@@ -85,7 +85,7 @@ namespace Ambev.Infrastructure.Persistence.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Custumer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Ambev.Core.Domain.Entities.Product", b =>

@@ -32,7 +32,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
         public async Task Handle_ValidRequest_ShouldUpdateCustomerAndCommit()
         {
             // Arrange
-            var request = new UpdateCustomerRequest { Id = 1, FirstName = "John", LastName = "Doe", Identification = "12345" };
+            var request = new UpdateCustomerRequest {  FirstName = "John", LastName = "Doe", Identification = "12345" };
+            request.SetId(1);
             var customer = new Customer { Id = 1, FirstName = "FirstName", LastName = "LastName", Identification = "Identification" };
             var response = new UpdateCustomerResponse { Id = 1, FirstName = "John", LastName = "Doe", Identification = "12345" };
 

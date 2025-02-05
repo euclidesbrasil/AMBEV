@@ -62,14 +62,16 @@ namespace Ambev.Core.Application.UseCases.Commands.Sale.CreateSale
 
             sale.CustomerFirstName =customer.FirstName;
             sale.CustomerLastName = customer.LastName;
-            // TODO: FIX
             sale.BranchName = branch.Name;
+            sale.GenerateSaleNumber();
             _saleRepository.Create(sale);
-
+            await _unitOfWork.Commit(cancellationToken);
+            sale.GenerateSaleNumber();
+            await _unitOfWork.Commit(cancellationToken);
             var createdSaleEvent = sale.GetSaleCreatedEvent();
             await _producerMessage.SendMessage(createdSaleEvent, "sale.created");
+           
 
-            await _unitOfWork.Commit(cancellationToken);
             return _mapper.Map<CreateSaleResponse>(sale);
         }
     }

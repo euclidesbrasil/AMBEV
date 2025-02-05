@@ -2,7 +2,4 @@
 
 namespace Ambev.Application.UseCases.Commands.Customer.DeleteCustomer;
 
-public class DeleteCustomerResponse : CustomerDTO
-{
-    public int Id { get; set; }
-}
+public sealed record DeleteCustomerResponse(string message);

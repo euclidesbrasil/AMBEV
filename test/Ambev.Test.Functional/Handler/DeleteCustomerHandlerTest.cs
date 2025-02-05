@@ -37,7 +37,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Arrange
             var request = new DeleteCustomerRequest(1);
             var customer = new Customer { Id = 1, FirstName = "John", LastName = "Doe", Identification = "12345" };
-            var response = new DeleteCustomerResponse { Id = 1, FirstName = "John", LastName = "Doe", Identification = "12345" };
+            var response = new DeleteCustomerResponse("Customer deleted with success.");
 
             _customerRepository.Get(request.id, Arg.Any<CancellationToken>()).Returns(customer);
             _mapper.Map<DeleteCustomerResponse>(customer).Returns(response);

@@ -11,7 +11,7 @@ namespace Ambev.Core.Domain.Entities
     public class Sale : BaseEntity
     {
         public int Id { get; set; }  // Identificador único da venda
-        public string SaleNumber { get; set; } // Número da venda (ex: 20240201001)
+        public string SaleNumber { get; internal set; } // Número da venda (ex: 20240201001)
         public DateTime SaleDate { get; set; } // Data da venda
         public int CustomerId { get; set; }  // Identidade Externa do Cliente
         public string CustomerFirstName { get; set; } // Nome do Cliente (desnormalizado)
@@ -41,20 +41,24 @@ namespace Ambev.Core.Domain.Entities
 
         public void Update(Sale request, Customer customer)
         {
-            SaleNumber = request.SaleNumber;
+            GenerateSaleNumber();
             SaleDate = request.SaleDate;
             BranchId = request.BranchId;
             IsCancelled = request.IsCancelled;
             CustomerId = customer.Id;
             CustomerFirstName = customer.FirstName;
             CustomerLastName = customer.LastName;
-
             if (IsCancelled)
             {
                 Cancel();
             }
         }
-
+        public void GenerateSaleNumber()
+        {
+            var random = new Random();
+            var randomNumber = random.Next(100, 999);
+            SaleNumber = Id.ToString("#000000000000");
+        }
         public void ClearItems()
         {
             Items = new List<SaleItem>();

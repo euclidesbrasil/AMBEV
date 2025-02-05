@@ -40,15 +40,30 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Arrange
             var request = new UpdateUserRequest
             {
-                Id = 1,
                 Username = "testuser",
                 Email = "test@example.com",
                 Password = "Password123",
-                Name = new Core.Application.UseCases.DTOs.NameDto { Firstname = "Test", Lastname = "User" },
+                Firstname = "Test", 
+                Lastname = "User",
                 Address = new Core.Application.UseCases.DTOs.AddressDto() { City = "City", Geolocation = new Core.Application.UseCases.DTOs.GeolocationDto() { Lat = "1.0", Long = "2.0" }, Number = 1, Street = "Street", Zipcode = "606060660" },
                 Status = UserStatus.Active,
                 Role = UserRole.Admin
             };
+
+            var responseUser = new UpdateUserResponse
+            {
+                Id =1,
+                Username = "testuser",
+                Email = "test@example.com",
+                Password = "Password123",
+                Firstname = "Test",
+                Lastname = "User",
+                Address = new Core.Application.UseCases.DTOs.AddressDto() { City = "City", Geolocation = new Core.Application.UseCases.DTOs.GeolocationDto() { Lat = "1.0", Long = "2.0" }, Number = 1, Street = "Street", Zipcode = "606060660" },
+                Status = UserStatus.Active,
+                Role = UserRole.Admin
+            };
+            request.UpdateId(1);
+
             var user = new User(
                 "testuser",
                 "test@example.com",
@@ -58,6 +73,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 UserStatus.Active, UserRole.Admin, _tokenService);
             user.Id = 1;
             _mapper.Map<User>(request).Returns(user);
+            _mapper.Map<UpdateUserResponse>(user).Returns(responseUser);
 
             // Act
             var response = await _handler.Handle(request, CancellationToken.None);
@@ -65,7 +81,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Assert
             _userRepository.Received().Update(user);
             await _unitOfWork.Received().Commit(CancellationToken.None);
-            _mapper.Received().Map<UpdateUserResponse>(request);
+            Assert.True(response.Id > 0);
         }
     }
 }

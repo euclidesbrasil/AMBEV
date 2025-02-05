@@ -41,7 +41,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
             // Arrange
             var request = new UpdateProductRequest
             {
-                Id = 1,
                 Title = "New Title",
                 Price = 100,
                 Description = "New Description",
@@ -49,6 +48,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Handler
                 Image = "new-image-url",
                 Rating = new RatingDTO { Rate = 5, Count = 10 }
             };
+            request.SetId(1);
 
             var product = new Product(1, "title", 10, "desc", "category", "http://image.com", new Rating(1, 2));
 

@@ -7,6 +7,10 @@ using Ambev.General.Api.Filters;
 using Microsoft.OpenApi.Models;
 using Ambev.Infrastructure.Persistence.MongoDB.Configuration;
 using MongoDB.Driver;
+using Ambev.Infrastructure.Persistence.PostgreSQL.Context;
+using Microsoft.EntityFrameworkCore;
+using Ambev.Infrastructure.Persistence.PostgreSQL.Seed;
+using Ambev.Core.Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -90,7 +94,22 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
+    var _jwtTokenService = scope.ServiceProvider.GetRequiredService<IJwtTokenService>();
     var initializer = new MongoDbInitializer(database);
     await initializer.InitializeAsync();
+
+    try
+    {
+        using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        {
+            var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+            context.Database.Migrate();
+            SeedData.Initialize(serviceScope.ServiceProvider, _jwtTokenService);
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
 }
 app.Run();

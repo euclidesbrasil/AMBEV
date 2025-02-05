@@ -1,5 +1,5 @@
 ﻿using Ambev.Core.Domain.Common;
-using Ambev.Core.Domain.Aggregate;
+
 using Ambev.Core.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;

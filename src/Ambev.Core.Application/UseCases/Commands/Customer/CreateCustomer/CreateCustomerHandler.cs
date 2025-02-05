@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ambev.Core.Domain.Aggregate;
+
 using Ambev.Core.Domain.Entities;
 using Ambev.Core.Domain.Interfaces;
 using Ambev.Core.Domain.ValueObjects;

@@ -7,7 +7,8 @@ public class DeleteUserResponse : UserDTO
     public DeleteUserResponse(UserDTO user)
     {
         Id = user.Id;
-        Name = user.Name;
+        Firstname = user.Firstname;
+        Lastname = user.Lastname;
         Email = user.Email;
     }
 }

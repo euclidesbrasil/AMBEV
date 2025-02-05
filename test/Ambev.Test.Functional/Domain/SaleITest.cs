@@ -51,17 +51,16 @@ namespace Ambev.Test.Domain
             var sale = new Sale { IsCancelled = false, Items = new List<SaleItem> { new SaleItem { IsCancelled = false } } };
             var request = new Sale
             {
-                SaleNumber = "12345",
                 SaleDate = DateTime.Now,
                 BranchId = 2,
                 IsCancelled = true
             };
+            request.GenerateSaleNumber();
 
             // Act
             sale.Update(request, customer);
 
             // Assert
-            Assert.Equal("12345", sale.SaleNumber);
             Assert.Equal(2, sale.BranchId);
             Assert.True(sale.IsCancelled);
             Assert.Equal(customer.Id, sale.CustomerId);

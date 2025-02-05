@@ -32,7 +32,6 @@ public class DeleteCustomerHandler : IRequestHandler<DeleteCustomerRequest, Dele
 
         _custumerRepository.Delete(customer);
         await _unitOfWork.Commit(cancellationToken);
-        DeleteCustomerResponse userResponse = _mapper.Map<DeleteCustomerResponse>(customer);
-        return userResponse;
+        return new DeleteCustomerResponse("Customer deleted with success.");
     }
 }

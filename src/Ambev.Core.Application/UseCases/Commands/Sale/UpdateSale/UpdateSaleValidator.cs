@@ -7,9 +7,6 @@ public sealed class UpdateSaleValidator : AbstractValidator<UpdateSaleRequest>
 {
     public UpdateSaleValidator()
     {
-        RuleFor(s => s.SaleNumber)
-            .NotEmpty().WithMessage("Sale number is required.")
-            .MaximumLength(20).WithMessage("Sale number cannot exceed 20 characters.");
 
         RuleFor(s => s.SaleDate)
             .NotEmpty().WithMessage("Sale date is required.");
