@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\**" />
     <Compile Remove="UseCases\DeleteUser\**" />
     <Compile Remove="UseCases\GetAllUser\**" />
     <Compile Remove="UseCases\UpdateUser\**" />
+    <EmbeddedResource Remove="Services\**" />
     <EmbeddedResource Remove="UseCases\DeleteUser\**" />
     <EmbeddedResource Remove="UseCases\GetAllUser\**" />
     <EmbeddedResource Remove="UseCases\UpdateUser\**" />
+    <None Remove="Services\**" />
     <None Remove="UseCases\DeleteUser\**" />
     <None Remove="UseCases\GetAllUser\**" />
     <None Remove="UseCases\UpdateUser\**" />

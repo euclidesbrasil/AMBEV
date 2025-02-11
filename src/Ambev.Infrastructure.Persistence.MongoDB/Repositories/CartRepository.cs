@@ -2,7 +2,6 @@
 using Ambev.Core.Domain.Common;
 using System.Linq;
 using Ambev.Core.Domain.Entities;
-using Ambev.Infrastructure.Persistence.MongoDB.Context;
 using System.Linq.Expressions;
 using MongoDB.Driver;
 using Ambev.Infrastructure.Persistence.MongoDB.Service;
