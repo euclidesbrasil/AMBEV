@@ -55,8 +55,6 @@ namespace Ambev.Core.Domain.Entities
         }
         public void GenerateSaleNumber()
         {
-            var random = new Random();
-            var randomNumber = random.Next(100, 999);
             SaleNumber = Id.ToString("#000000000000");
         }
         public void ClearItems()
@@ -201,9 +199,9 @@ namespace Ambev.Core.Domain.Entities
             return new SaleModifiedEvent(this, "Sale modified");
         }
 
-        public SaleModifiedEvent GetSaleCreatedEvent()
+        public SaleCreatedEvent GetSaleCreatedEvent()
         {
-            return new SaleModifiedEvent(this, "Sale created");
+            return new SaleCreatedEvent(this, "Sale created");
         }
 
     }

@@ -14,6 +14,7 @@ using Ambev.Infrastructure.Persistence.MongoDB.Service;
 using Ambev.Core.Application.UseCases.Mapper;
 using Ambev.Core.Application.Shared.Behavior;
 using Ambev.Infrastructure.Security;
+using Ambev.Infrastructure.Messaging.RabbitMQ;
 namespace Ambev.Infrastructure.CrossCutting.IoC
 {
     public static class DependencyInjection
@@ -52,7 +53,7 @@ namespace Ambev.Infrastructure.CrossCutting.IoC
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<JwtTokenService>();
-            services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddSingleton<IJwtTokenService, JwtTokenService>();
             services.AddScoped<CounterService>();
             services.AddAutoMapper(typeof(CommonMapper));
             
