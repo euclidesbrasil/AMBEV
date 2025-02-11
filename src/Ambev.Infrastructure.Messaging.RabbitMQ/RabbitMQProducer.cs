@@ -6,12 +6,17 @@ namespace Ambev.Infrastructure.Messaging.RabbitMQ
 {
     public class RabbitMQProducer : IProducerMessage
     {
+        private readonly string _hostName;
+        public RabbitMQProducer(string hostName)
+        {
+            _hostName = hostName;
+        }
         public async Task SendMessage<T>(T message, string routingKey)
         {
             // Definição do servidor Rabbit MQ
             var factory = new ConnectionFactory
             {
-                HostName = "localhost"
+                HostName = _hostName
             };
 
             // Cria uma conexão RabbitMQ usando uma factory

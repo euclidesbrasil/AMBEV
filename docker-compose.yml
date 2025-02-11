@@ -6,21 +6,20 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5000:80"
-      - "5001:443"
+      - "5000:8080"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=localhost;Port=5432;Database=AMBEVDOTNET;Username=postgres;Password=admin
-      - MongoDbSettings__ConnectionString=mongodb://localhost:27017
+      - ConnectionStrings__DefaultConnection=Host=ambev_postgres;Port=5432;Database=AMBEVDOTNET;Username=postgres;Password=admin
+      - MongoDbSettings__ConnectionString=mongodb://ambev_mongodb:27017
       - MongoDbSettings__DatabaseName=AMBEVDOTNET
-      - RabbitMQ__Host=localhost
+      - RabbitMQSettings__HostName=ambev_rabbitmq
 
   rabbitmq:
     image: "rabbitmq:3-management"
     container_name: ambev_rabbitmq
-    hostname: localhost
+    hostname: ambev_rabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5673:5672"
+      - "15673:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
@@ -28,9 +27,9 @@ services:
   postgres:
     image: "postgres:15"
     container_name: ambev_postgres
-    hostname: localhost
+    hostname: ambev_postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
@@ -41,9 +40,9 @@ services:
   mongodb:
     image: "mongo:6"
     container_name: ambev_mongodb
-    hostname: localhost
+    hostname: ambev_mongodb
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 

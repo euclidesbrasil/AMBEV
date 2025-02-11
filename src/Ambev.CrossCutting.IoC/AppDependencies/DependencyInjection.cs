@@ -43,8 +43,9 @@ namespace Ambev.Infrastructure.CrossCutting.IoC
                 return client.GetDatabase(settings.DatabaseName);
             });
 
-            
-            services.AddScoped<IProducerMessage, RabbitMQProducer>();
+            // Adicionar a configuração RabbitMQ
+
+            services.AddScoped<IProducerMessage>(_ => new RabbitMQProducer(configuration.GetSection("RabbitMQSettings").Get<RabbitMQSettings>().Hostname));
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();
@@ -56,7 +57,7 @@ namespace Ambev.Infrastructure.CrossCutting.IoC
             services.AddSingleton<IJwtTokenService, JwtTokenService>();
             services.AddScoped<CounterService>();
             services.AddAutoMapper(typeof(CommonMapper));
-            
+
             var myhandlers = AppDomain.CurrentDomain.Load("Ambev.Core.Application");
             services.AddMediatR(cfg =>
             {
